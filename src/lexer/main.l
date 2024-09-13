@@ -11,9 +11,12 @@ L			[a-zA-Z_]
 %%
 
 {L}[{D}{L}]*    {return IDENTIFIER;}
+{D}+            {return CONSTANT;}
+{D}+.{D}*       {return CONSTANT;}
+{D}*.{D}+       {return CONSTANT;}
 
-"constant"      {return "CONSTANT";}
-"constant"      {return "CONSTANT"}
+"constant"      {return CONST;}
+"constant"      {return CONST;}
 
 "["             {return '[';}
 "]"             {return ']';}
