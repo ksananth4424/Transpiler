@@ -12,6 +12,9 @@ L			[a-zA-Z_]
 
 {L}[{D}{L}]*    {return IDENTIFIER;}
 
+"int constant"  {return "CONST_INT";}
+"float constant" {return "CONST_FLOAT"}
+
 "["             {return '[';}
 "]"             {return ']';}
 "{"             {return '{';}
@@ -24,10 +27,23 @@ L			[a-zA-Z_]
 ">"             {return '>';}
 "?"             {return '?';}
 
+"set"           {return SET;}
+"if"            {return IF;}
+"else"          {return ELSE;}
+"size"          {return SIZE;}
+"loop"          {return LOOP;}
+"finally"       {return FINALLY;}
+"return"        {return RETURN;}
+"func"          {return FUNC;}
+"print"         {return PRINT;}
+
 "int"           {return INT;}
 "float"         {return FLOAT;}
 "big"           {return BIG;}
 "small"         {return SMALL;}
+
+"->"            {return FORWARD_ACCESS;}
+"<-"            {return BACKWARD_ACCESS;}
 
 "+"             {return '+';}
 "-"             {return '-';}
@@ -35,9 +51,19 @@ L			[a-zA-Z_]
 "/"             {return '/';}
 "%"             {return '%';}
 
+"|"             {return '|';}
+"&"             {return '&';}
+"^"             {return '^';}
+"~"             {return '~';}
+
 "or"            {return OR;}
 "and"           {return AND;}
 "not"           {return NOT;}
 
-#.*\n           ;
-.               {}
+"<="            {return LE_OP;}
+">="            {return GE_OP;}
+"<>"            {return NE_OP;}
+"!"             {return '!';}
+
+#.*\n           ; /* comment */
+.               {/* Ignore bad characters */}
