@@ -1,6 +1,6 @@
 %{
 #include <stdio.h>
-#include "y.tab.h"
+// #include "y.tab.h"
 
 void count();
 %}
@@ -9,64 +9,89 @@ D			[0-9]
 L			[a-zA-Z_]
 
 %%
+{L}({D}|{L})*    {count(); return IDENTIFIER;}
+{D}+            {count(); return CONSTANT;}
+{D}+\.{D}*      {count(); return CONSTANT;}
+{D}*\.{D}+      {count(); return CONSTANT;}
 
-{L}[{D}{L}]*    {return IDENTIFIER;}
-{D}+            {return CONSTANT;}
-{D}+.{D}*       {return CONSTANT;}
-{D}*.{D}+       {return CONSTANT;}
+"constant"      {count(); return CONST;}
 
-"constant"      {return CONST;}
-"constant"      {return CONST;}
+"["             {count(); return '[';}
+"]"             {count(); return ']';}
+"{"             {count(); return '{';}
+"}"             {count(); return '}';}
+"("             {count(); return '(';}
+")"             {count(); return ')';}
+":"             {count(); return ':';}
+";"             {count(); return ';';}
+"<"             {count(); return '<';}
+">"             {count(); return '>';}
+"?"             {count(); return '?';}
+","             {count(); return ',';}
 
-"["             {return '[';}
-"]"             {return ']';}
-"{"             {return '{';}
-"}"             {return '}';}
-"("             {return '(';}
-")"             {return ')';}
-":"             {return ':';}
-";"             {return ';';}
-"<"             {return '<';}
-">"             {return '>';}
-"?"             {return '?';}
+"set"           {count(); return SET;}
+"if"            {count(); return IF;}
+"else"          {count(); return ELSE;}
+"size"          {count(); return SIZE;}
+"loop"          {count(); return LOOP;}
+"finally"       {count(); return FINALLY;}
+"return"        {count(); return RETURN;}
+"func"          {count(); return FUNC;}
+"print"         {count(); return PRINT;}
 
-"set"           {return SET;}
-"if"            {return IF;}
-"else"          {return ELSE;}
-"size"          {return SIZE;}
-"loop"          {return LOOP;}
-"finally"       {return FINALLY;}
-"return"        {return RETURN;}
-"func"          {return FUNC;}
-"print"         {return PRINT;}
+"int"           {count(); return INT;}
+"float"         {count(); return FLOAT;}
+"big"           {count(); return BIG;}
+"small"         {count(); return SMALL;}
 
-"int"           {return INT;}
-"float"         {return FLOAT;}
-"big"           {return BIG;}
-"small"         {return SMALL;}
+"->"            {count(); return FORWARD_ACCESS;}
+"<-"            {count(); return BACKWARD_ACCESS;}
 
-"->"            {return FORWARD_ACCESS;}
-"<-"            {return BACKWARD_ACCESS;}
+"+"             {count(); return '+';}
+"-"             {count(); return '-';}
+"*"             {count(); return '*';}
+"/"             {count(); return '/';}
+"%"             {count(); return '%';}
+"="             {count(); return '=';}
 
-"+"             {return '+';}
-"-"             {return '-';}
-"*"             {return '*';}
-"/"             {return '/';}
-"%"             {return '%';}
+"|"             {count(); return '|';}
+"&"             {count(); return '&';}
+"^"             {count(); return '^';}
+"~"             {count(); return '~';}
 
-"|"             {return '|';}
-"&"             {return '&';}
-"^"             {return '^';}
-"~"             {return '~';}
+"or"            {count(); return OR;}
+"and"           {count(); return AND;}
+"not"           {count(); return NOT;}
 
-"or"            {return OR;}
-"and"           {return AND;}
-"not"           {return NOT;}
-
-"<="            {return LE_OP;}
-">="            {return GE_OP;}
-"<>"            {return NE_OP;}
-"!"             {return '!';}
+"<="            {count(); return LE_OP;}
+">="            {count(); return GE_OP;}
+"<>"            {count(); return NE_OP;}
+"!"             {count(); return '!';}
 
 #.*\n           ; /* comment */
+[ \t\v\n\f]     {}
 .               {/* Ignore bad characters */}
+
+%%
+
+void count() {
+    ECHO;
+}
+
+int main(int argc, char** argv)
+{
+	if(argc >= 2){
+		yyin = fopen(argv[1] ,"r");
+		if(yyin ==NULL){
+			printf("File not found\n");
+			return 0;
+		}
+	}
+	else{
+		puts("error: usage: ./lexer.out <filename>");
+		return 0;
+	}
+	yylex();
+    fclose(yyin);
+	return 0;
+}
