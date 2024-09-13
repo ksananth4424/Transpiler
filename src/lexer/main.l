@@ -12,8 +12,8 @@ L			[a-zA-Z_]
 
 {L}[{D}{L}]*    {return IDENTIFIER;}
 
-"int constant"  {return "CONST_INT";}
-"float constant" {return "CONST_FLOAT"}
+"constant"      {return "CONSTANT";}
+"constant"      {return "CONSTANT"}
 
 "["             {return '[';}
 "]"             {return ']';}
