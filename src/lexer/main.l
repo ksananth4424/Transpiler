@@ -1,6 +1,6 @@
 %{
 #include <stdio.h>
-// #include "y.tab.h"
+#include "y.tab.h"
 
 void count();
 %}
@@ -14,7 +14,6 @@ L			[a-zA-Z_]
 {D}+\.{D}*      {count(); return CONSTANT;}
 {D}*\.{D}+      {count(); return CONSTANT;}
 
-"constant"      {count(); return CONST;}
 
 "["             {count(); return '[';}
 "]"             {count(); return ']';}
@@ -43,6 +42,7 @@ L			[a-zA-Z_]
 "float"         {count(); return FLOAT;}
 "big"           {count(); return BIG;}
 "small"         {count(); return SMALL;}
+"constant"      {count(); return CONST;}
 
 "->"            {count(); return FORWARD_ACCESS;}
 "<-"            {count(); return BACKWARD_ACCESS;}
@@ -78,20 +78,20 @@ void count() {
     ECHO;
 }
 
-int main(int argc, char** argv)
-{
-	if(argc >= 2){
-		yyin = fopen(argv[1] ,"r");
-		if(yyin ==NULL){
-			printf("File not found\n");
-			return 0;
-		}
-	}
-	else{
-		puts("error: usage: ./lexer.out <filename>");
-		return 0;
-	}
-	yylex();
-    fclose(yyin);
-	return 0;
-}
+// int main(int argc, char** argv)
+// {
+// 	if(argc >= 2){
+// 		yyin = fopen(argv[1] ,"r");
+// 		if(yyin ==NULL){
+// 			printf("File not found\n");
+// 			return 0;
+// 		}
+// 	}
+// 	else{
+// 		puts("error: usage: ./lexer.out <filename>");
+// 		return 0;
+// 	}
+// 	yylex();
+//     fclose(yyin);
+// 	return 0;
+// }
