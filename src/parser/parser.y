@@ -151,6 +151,21 @@ initializer
     : assignment_statement
     ;
 
+push_pop_statement
+    : accessed_name BACKWARD_ACCESS '[' expression ']'
+    | '[' expression ']' FORWARD_ACCESS IDENTIFIER
+    | IDENTIFIER FORWARD_ACCESS '[' accessed_name ']'
+    | '[' accessed_name ']' BACKWARD_ACCESS IDENTIFIER
+    | IDENTIFIER FORWARD_ACCESS '[' ']'
+    | '[' ']' BACKWARD_ACCESS IDENTIFIER
+    ;
+
+accessed_name
+    : IDENTIFIER
+    | accessed_name '[' assignment_statement ']'
+    ;
+
+
 %%
 
 int yywrap(){
