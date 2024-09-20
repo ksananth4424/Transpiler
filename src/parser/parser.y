@@ -14,7 +14,7 @@
 %%
 
 start_rule
-    : assignment_statement ';' {puts("success");}
+    : statement {puts("success");}
 
 set_statement 
     : SET INT SMALL ';'
@@ -163,17 +163,63 @@ initializer
     ;
 
 push_pop_statement
-    : accessed_name BACKWARD_ACCESS '[' expression ']'
-    | '[' expression ']' FORWARD_ACCESS accessed_name
-    | accessed_name FORWARD_ACCESS '[' accessed_name ']'
-    | '[' accessed_name ']' BACKWARD_ACCESS accessed_name
-    | accessed_name FORWARD_ACCESS '[' ']'
-    | '[' ']' BACKWARD_ACCESS accessed_name
+    : postfix_expression BACKWARD_ACCESS '[' expression ']'
+    | '[' expression ']' FORWARD_ACCESS postfix_expression
+    | postfix_expression FORWARD_ACCESS '[' postfix_expression ']'
+    | '[' postfix_expression ']' BACKWARD_ACCESS postfix_expression
+    | postfix_expression FORWARD_ACCESS '[' ']'
+    | '[' ']' BACKWARD_ACCESS postfix_expression
     ;
 
-accessed_name
-    : IDENTIFIER
-    | accessed_name '[' expression ']'
+statement
+	: expression_statement
+	| compound_statement
+	/* | selection_statement */
+	| iteration_statement
+	| jump_statement
+    | print_statement
+    | set_statement_list
+    | push_pop_statement
+	;
+
+compound_statement
+	: '<' '>'
+	| '<' statement_list '>'
+	| '<' declaration_list '>'
+	| '<' declaration_list statement_list '>'
+	;
+
+declaration_list
+	: declaration
+	| declaration_list declaration
+	;
+
+statement_list
+	: statement
+	| statement_list statement
+	;
+
+expression_statement
+	: ';'
+	| expression ';'
+	;
+
+/* selection_statement
+	: 
+	; */
+
+iteration_statement
+    : LOOP '(' expression_statement expression ')' ':' statement FINALLY ':' statement
+    | LOOP '(' expression_statement expression_statement expression ')' ':' statement FINALLY ':' statement
+	;
+
+jump_statement
+	: RETURN ';'
+	| RETURN expression ';'
+	;
+
+print_statement
+    : PRINT '(' expression ')'
     ;
 
 %%
