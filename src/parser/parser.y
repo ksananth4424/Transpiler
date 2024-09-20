@@ -111,6 +111,43 @@ expression
     : assignment_statement
     ;
 
+declaration
+    : declaration_specifiers ';'
+    | declaration_specifiers init_declarator_list ';'
+    ;
+
+declaration_specifiers
+    : type_specifier 
+    | type_specifier declaration_specifiers
+    | '[' declaration_specifiers ']'
+    | '{' declaration_specifiers ':' declaration_specifiers '}' 
+    ;
+
+init_declarator_list
+    : init_declarator
+    | init_declarator_list ',' init_declarator
+    ;
+
+init_declarator
+    : declarator
+    | declarator '=' initializer
+    ;
+
+type_specifier
+    : INT
+    | FLOAT
+    | INT CONST
+    | FLOAT CONST
+    ;
+
+declarator
+    : IDENTIFIER
+    ;
+
+initializer
+    : assignment_statement
+    ;
+
 %%
 
 int yywrap(){
