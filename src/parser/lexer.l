@@ -10,6 +10,8 @@ L			[a-zA-Z_]
 
 %%
 
+
+
 "["             {count(); return '[';}
 "]"             {count(); return ']';}
 "{"             {count(); return '{';}
@@ -64,35 +66,17 @@ L			[a-zA-Z_]
 "=="            {count(); return EQ_OP;}
 "!"             {count(); return '!';}
 
+#.*\n           ; /* comment */
+[ \t\v\n\f]     {}
+.               {/* Ignore bad characters */}
+
 {L}({D}|{L})*    {count(); return IDENTIFIER;}
 {D}+            {count(); return CONSTANT;}
 {D}+\.{D}*      {count(); return CONSTANT;}
 {D}*\.{D}+      {count(); return CONSTANT;}
-
-#.*\n           ; /* comment */
-[ \t\v\n\f]     {}
-.               {/* Ignore bad characters */}
 
 %%
 
 void count() {
     ECHO;
 }
-
-// int main(int argc, char** argv)
-// {
-// 	if(argc >= 2){
-// 		yyin = fopen(argv[1] ,"r");
-// 		if(yyin ==NULL){
-// 			printf("File not found\n");
-// 			return 0;
-// 		}
-// 	}
-// 	else{
-// 		puts("error: usage: ./lexer.out <filename>");
-// 		return 0;
-// 	}
-// 	yylex();
-//     fclose(yyin);
-// 	return 0;
-// }

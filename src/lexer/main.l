@@ -9,10 +9,7 @@ D			[0-9]
 L			[a-zA-Z_]
 
 %%
-{L}({D}|{L})*    {count(); return IDENTIFIER;}
-{D}+            {count(); return CONSTANT;}
-{D}+\.{D}*      {count(); return CONSTANT;}
-{D}*\.{D}+      {count(); return CONSTANT;}
+
 
 
 "["             {count(); return '[';}
@@ -72,6 +69,11 @@ L			[a-zA-Z_]
 #.*\n           ; /* comment */
 [ \t\v\n\f]     {}
 .               {/* Ignore bad characters */}
+
+{L}({D}|{L})*    {count(); return IDENTIFIER;}
+{D}+            {count(); return CONSTANT;}
+{D}+\.{D}*      {count(); return CONSTANT;}
+{D}*\.{D}+      {count(); return CONSTANT;}
 
 %%
 

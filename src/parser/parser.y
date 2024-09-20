@@ -10,8 +10,11 @@
 %token INT FLOAT BIG SMALL CONST
 %token SET IF ELSE SIZE LOOP FINALLY RETURN FUNC PRINT
 
-%start assignment_statement
+%start start
 %%
+
+start
+    : expression {puts("success"); exit(0);}
 
 set_statement 
     : SET INT SMALL ';'
@@ -104,11 +107,11 @@ logical_or_expression
 
 assignment_statement 
     : logical_or_expression
-    | unary_expression '=' assignment_statement ';'
+    | unary_expression '=' assignment_statement 
     ;
 
 expression 
-    : assignment_statement
+    : assignment_statement ';'
     ;
 
 declaration
@@ -158,6 +161,15 @@ void yyerror(char* s) {
     printf("%s\n",s);
 }
 
-int main() {
+int main(int argc, char **argv) {
+    if (argc != 2) {
+        puts("error: usage ./a.out <input_file>");
+        return 0;
+    }
+    yyin = fopen(argv[1], "r");
+    if (yyin == NULL) {
+        puts("error: couldn't open the file");
+        return 0;
+    }
     yyparse(); 
 }
