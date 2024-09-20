@@ -8,52 +8,62 @@
 %start set_statement
 %%
 
-set_statement : SET INT SMALL ';'
-              | SET INT BIG ';'
-              | SET FLOAT SMALL ';'
-              | SET FLOAT BIG ';'
-              ;
+set_statement 
+    : SET INT SMALL ';'
+    | SET INT BIG ';'
+    | SET FLOAT SMALL ';'
+    | SET FLOAT BIG ';'
+    ;
 
-set_statement_list : set_statement_list set_statement
-                   | set_statement
-                   ;
+set_statement_list 
+    : set_statement_list set_statement
+    | set_statement
+    ;
 
-assignment_statement : IDENTIFIER '=' expression ';'
-                     ;
 
-expression : additive_expression
-           ;
+expression 
+    : additive_expression
+    ;
 
-additive_expression : additive_expression '+' multiplicative_expression
-                    | additive_expression '-' multiplicative_expression
-                    | multiplicative_expression
-                    ;
+additive_expression 
+    : additive_expression '+' multiplicative_expression
+    | additive_expression '-' multiplicative_expression
+    | multiplicative_expression
+    ;
 
-multiplicative_expression : multiplicative_expression '*' unary_expression
-                          : multiplicative_expression '/' unary_expression
-                          : multiplicative_expression '%' unary_expression
-                          | unary_expression
-                          ;
+unary_expression 
+    : '!' unary_expression
+    | '~' unary_expression
+    | '-' unary_expression
+    | '+' unary_expression
+    |  postfix_expression
+    ;
 
-unary_expression : '!' unary_expression
-                 | '~' unary_expression
-                 | '-' unary_expression
-                 | '+' unary_expression
-                 |  postfix_expression
-                 ;
+multiplicative_expression 
+    : multiplicative_expression '*' unary_expression
+    | multiplicative_expression '/' unary_expression
+    | multiplicative_expression '%' unary_expression
+    | unary_expression
+    ;
                  
-postfix_expression : postfix_expression '[' expression ']'
-                   | postfix_expression '(' ')'
-                   | postfix_expression '(' argument_expression_list ')'
-                   | primary_expression
-                   ;
-
-primary_expression : '(' expression ')'
-                   | IDENTIFIER
-                   | CONSTANT 
-                   ;
+postfix_expression 
+    : postfix_expression '[' expression ']'
+    | postfix_expression '(' ')'
+    | postfix_expression '(' argument_expression_list ')'
+    | primary_expression
+    ;
 
 argument_expression_list : 
+
+
+primary_expression : '(' expression ')'
+    | IDENTIFIER
+    | CONSTANT 
+    ;
+
+assignment_statement 
+    : IDENTIFIER '=' expression ';'
+    ;
 
 %%
 #include <stdio.h>
