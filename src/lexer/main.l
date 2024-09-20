@@ -66,6 +66,7 @@ L			[a-zA-Z_]
 "<="            {count(); return LE_OP;}
 ">="            {count(); return GE_OP;}
 "<>"            {count(); return NE_OP;}
+"=="            {count(); return EQ_OP;}
 "!"             {count(); return '!';}
 
 #.*\n           ; /* comment */
