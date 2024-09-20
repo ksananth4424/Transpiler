@@ -7,7 +7,8 @@ Lexical Analyser:
 
 ----------------------------------------------------------
 Syntax Analyser:
-- Build the whole thing
+- get rid of accessed_name
+- fix unary expression
 
 
 ----------------------------------------------------------

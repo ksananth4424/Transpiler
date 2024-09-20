@@ -60,16 +60,18 @@ L			[a-zA-Z_]
 "and"           {count(); /* return AND; */}
 "not"           {count(); /* return NOT; */}
 
-{L}({D}|{L})*    {count(); /* return IDENTIFIER; */}
-{D}+            {count(); /* return CONSTANT; */}
-{D}+\.{D}*      {count(); /* return CONSTANT; */}
-{D}*\.{D}+      {count(); /* return CONSTANT; */}
 
 "<="            {count(); /* return LE_OP; */}
 ">="            {count(); /* return GE_OP; */}
 "<>"            {count(); /* return NE_OP; */}
 "=="            {count(); /* return NE_OP; */}
 "!"             {count(); /* return '!'; */}
+
+{L}({D}|{L})*    {count(); /* return IDENTIFIER; */}
+{D}+            {count(); /* return CONSTANT; */}
+{D}+\.{D}*      {count(); /* return CONSTANT; */}
+{D}*\.{D}+      {count(); /* return CONSTANT; */}
+
 #.*\n           ; /* comment */
 [ \t\v\n\f]     {}
 .               {/* Ignore bad characters */}

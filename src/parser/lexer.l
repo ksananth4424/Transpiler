@@ -10,8 +10,6 @@ L			[a-zA-Z_]
 
 %%
 
-
-
 "["             {count(); return '[';}
 "]"             {count(); return ']';}
 "{"             {count(); return '{';}
@@ -66,17 +64,18 @@ L			[a-zA-Z_]
 "=="            {count(); return EQ_OP;}
 "!"             {count(); return '!';}
 
-#.*\n           ; /* comment */
-[ \t\v\n\f]     {}
-.               {/* Ignore bad characters */}
-
 {L}({D}|{L})*    {count(); return IDENTIFIER;}
 {D}+            {count(); return CONSTANT;}
 {D}+\.{D}*      {count(); return CONSTANT;}
 {D}*\.{D}+      {count(); return CONSTANT;}
 
+#.*\n           ; /* comment */
+[ \t\v\n\f]     {}
+.               {/* Ignore bad characters */}
+
+
 %%
 
 void count() {
-    ECHO;
+    // ECHO;
 }

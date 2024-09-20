@@ -1,6 +1,6 @@
 %{
 #include <stdio.h>
-#include"lex.yy.c"
+#include "lex.yy.c"
 %}
 
 %token IDENTIFIER CONSTANT
@@ -10,11 +10,11 @@
 %token INT FLOAT BIG SMALL CONST
 %token SET IF ELSE SIZE LOOP FINALLY RETURN FUNC PRINT
 
-%start start
+%start start_rule
 %%
 
-start
-    : expression {puts("success"); exit(0);}
+start_rule
+    : assignment_statement ';' {puts("success");}
 
 set_statement 
     : SET INT SMALL ';'
@@ -34,15 +34,24 @@ primary_expression
     | CONSTANT 
     ;
 
+function_call
+    : IDENTIFIER '(' ')'
+    | IDENTIFIER '(' argument_expression_list ')'
+    ;
+
+map_array
+    : map_array '[' expression ']'
+    | '[' expression ']'
+    ;
+
 postfix_expression 
-    : postfix_expression '[' expression ']'
-    | postfix_expression '(' ')'
-    | postfix_expression '(' argument_expression_list ')'
+    : IDENTIFIER map_array
+    | function_call map_array
     | primary_expression
     ;
 
 unary_expression 
-    : '!' unary_expression
+    : NOT unary_expression
     | '~' unary_expression
     | '-' unary_expression
     | '+' unary_expression
@@ -63,9 +72,10 @@ additive_expression
     ;
         
 argument_expression_list
-    : assignment_statement
-    | argument_expression_list ',' assignment_statement
+    : expression
+    | argument_expression_list ',' expression
     ;
+    
 relational_expression
 	: additive_expression
 	| relational_expression '<' additive_expression
@@ -105,13 +115,14 @@ logical_or_expression
 	| logical_or_expression OR logical_and_expression
 	;
 
-assignment_statement 
+expression 
     : logical_or_expression
-    | unary_expression '=' assignment_statement 
     ;
 
-expression 
-    : assignment_statement ';'
+assignment_statement 
+    : expression
+    | IDENTIFIER map_array '=' expression 
+    | IDENTIFIER '=' expression 
     ;
 
 declaration
@@ -153,18 +164,17 @@ initializer
 
 push_pop_statement
     : accessed_name BACKWARD_ACCESS '[' expression ']'
-    | '[' expression ']' FORWARD_ACCESS IDENTIFIER
-    | IDENTIFIER FORWARD_ACCESS '[' accessed_name ']'
-    | '[' accessed_name ']' BACKWARD_ACCESS IDENTIFIER
-    | IDENTIFIER FORWARD_ACCESS '[' ']'
-    | '[' ']' BACKWARD_ACCESS IDENTIFIER
+    | '[' expression ']' FORWARD_ACCESS accessed_name
+    | accessed_name FORWARD_ACCESS '[' accessed_name ']'
+    | '[' accessed_name ']' BACKWARD_ACCESS accessed_name
+    | accessed_name FORWARD_ACCESS '[' ']'
+    | '[' ']' BACKWARD_ACCESS accessed_name
     ;
 
 accessed_name
     : IDENTIFIER
-    | accessed_name '[' assignment_statement ']'
+    | accessed_name '[' expression ']'
     ;
-
 
 %%
 

@@ -1,4 +1,4 @@
-all: main1 main2 main3
+all: main2 main1 main3
 
 main1: lexer.l
 	lex lexer.l
