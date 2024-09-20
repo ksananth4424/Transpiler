@@ -1,3 +1,8 @@
+%{
+#include <stdio.h>
+#include"lex.yy.c"
+%}
+
 %token IDENTIFIER CONSTANT
 %token OR AND NOT
 %token LE_OP GE_OP NE_OP EQ_OP
@@ -5,7 +10,7 @@
 %token INT FLOAT BIG SMALL CONST
 %token SET IF ELSE SIZE LOOP FINALLY RETURN FUNC PRINT
 
-%start set_statement
+%start assignment_statement
 %%
 
 set_statement 
@@ -54,8 +59,10 @@ additive_expression
     | multiplicative_expression
     ;
         
-argument_expression_list : 
-
+argument_expression_list
+    : assignment_statement
+    | argument_expression_list ',' assignment_statement
+    ;
 relational_expression
 	: additive_expression
 	| relational_expression '<' additive_expression
@@ -105,7 +112,6 @@ expression
     ;
 
 %%
-#include <stdio.h>
 
 int yywrap(){
     return 1;
