@@ -17,6 +17,7 @@ Syntax Analyser:
 - push_pop giving sr conflicts
 - implement atleast one return statement
 - removed if keyword
+- remove function_declaration from statement_list
 
 
 ----------------------------------------------------------

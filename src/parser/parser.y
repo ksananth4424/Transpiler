@@ -14,18 +14,35 @@
 %%
 
 start_rule
-    : statement_list {puts("success");}
+    : set_up_section program_body {puts("success");}
+
+program_body
+    : statement_list
+    |
+    ;
+
+set_up_section
+    : 
+    | set_up_section function_declaration
+    | set_up_section set_statement
+    ;
+
+function_declaration
+    : FUNC IDENTIFIER '(' parameter_list ';' declaration_specifier ')' compound_statement
+
+parameter_list
+    : parameter
+    | parameter_list ',' parameter
+    ;
+
+parameter
+    : declaration_specifier IDENTIFIER
 
 set_statement 
     : SET INT SMALL ';'
     | SET INT BIG ';'
     | SET FLOAT SMALL ';'
     | SET FLOAT BIG ';'
-    ;
-
-set_statement_list 
-    : set_statement_list set_statement
-    | set_statement
     ;
 
 primary_expression 
@@ -39,6 +56,11 @@ function_call
     | IDENTIFIER '(' argument_expression_list ')'
     ;
 
+argument_expression_list
+    : expression
+    | argument_expression_list ',' expression
+    ;    
+
 map_array
     : map_array '[' expression ']'
     | '[' expression ']'
@@ -47,6 +69,7 @@ map_array
 postfix_expression 
     : IDENTIFIER map_array
     | function_call map_array
+    | function_call
     | primary_expression
     ;
 
@@ -55,6 +78,7 @@ unary_expression
     | '~' unary_expression
     | '-' unary_expression
     | '+' unary_expression
+    | SIZE '[' postfix_expression ']'
     |  postfix_expression
     ;
 
@@ -69,11 +93,6 @@ additive_expression
     : additive_expression '+' multiplicative_expression
     | additive_expression '-' multiplicative_expression
     | multiplicative_expression
-    ;
-        
-argument_expression_list
-    : expression
-    | argument_expression_list ',' expression
     ;
     
 relational_expression
@@ -125,11 +144,6 @@ assignment_statement
     | IDENTIFIER '=' expression
     ;
 
-/* declaration_list
-    : declaration_list declaration_statement
-    | declaration_statement
-    ; */
-
 declaration_statement
     : declaration_specifier init_declarator_list ';'
     ;
@@ -174,28 +188,26 @@ initializer
     | '[' IDENTIFIER map_array ']' BACKWARD_ACCESS IDENTIFIER map_array
     | IDENTIFIER map_array FORWARD_ACCESS '[' ']'
     | '[' ']' BACKWARD_ACCESS IDENTIFIER map_array
-    ; */
+    ;  */
 
-statement
-	: assignment_statement ';'
-	| compound_statement
-	| iteration_statement
-	| jump_statement
-    | print_statement
-    /* | push_pop_statement */
-    | if_else_statement
-    | declaration_statement
-    | function_declaration
-	;
+push_pop_statement
+    : IDENTIFIER BACKWARD_ACCESS '[' expression ']'
+    | IDENTIFIER map_array BACKWARD_ACCESS '[' expression ']'
+    | '[' expression ']' FORWARD_ACCESS IDENTIFIER
+    | '[' expression ']' FORWARD_ACCESS IDENTIFIER map_array
+    | IDENTIFIER FORWARD_ACCESS '[' expression ']'
+    | IDENTIFIER map_array FORWARD_ACCESS '[' expression ']'
+    | '[' expression ']' BACKWARD_ACCESS IDENTIFIER
+    | '[' expression ']' BACKWARD_ACCESS IDENTIFIER map_array
+    | IDENTIFIER FORWARD_ACCESS '[' ']'
+    | IDENTIFIER map_array FORWARD_ACCESS '[' ']'
+    | '[' ']' BACKWARD_ACCESS IDENTIFIER
+    | '[' ']' BACKWARD_ACCESS IDENTIFIER map_array
+    ; 
 
 compound_statement
 	: '<' '>'
 	| '<' statement_list '>'
-	;
-
-statement_list
-	: statement
-	| statement_list statement
 	;
 
 expression_statement
@@ -213,8 +225,8 @@ iteration_statement
 	;
 
 jump_statement
-	: RETURN VOID ';'
-	| RETURN expression ';'
+	: RETURN VOID 
+	| RETURN expression 
 	;
 
 print_statement
@@ -231,16 +243,22 @@ if_else_statement
     : '<' chaining_if_else '>'
     ;
 
-function_declaration
-    : FUNC IDENTIFIER '(' parameter_list ';' declaration_specifier ')' compound_statement
+statement
+	: assignment_statement ';'
+	| compound_statement
+	| iteration_statement
+	| jump_statement ';'
+    | print_statement ';'
+    | push_pop_statement ';'
+    | if_else_statement
+    | declaration_statement
+	;
 
-parameter_list
-    : parameter
-    | parameter_list ',' parameter
-    ;
+statement_list
+	: statement
+	| statement_list statement
+	;
 
-parameter
-    : declaration_specifier IDENTIFIER
 %%
 
 int yywrap(){
