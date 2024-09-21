@@ -24,7 +24,6 @@ L			[a-zA-Z_]
 ","             {count(); return ',';}
 
 "set"           {count(); return SET;}
-"if"            {count(); return IF;}
 "else"          {count(); return ELSE;}
 "size"          {count(); return SIZE;}
 "loop"          {count(); return LOOP;}

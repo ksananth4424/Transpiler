@@ -14,7 +14,7 @@
 %%
 
 start_rule
-    : statement {puts("success");}
+    : statement_list {puts("success");}
 
 set_statement 
     : SET INT SMALL ';'
@@ -125,16 +125,19 @@ assignment_statement
     | IDENTIFIER '=' expression
     ;
 
-declaration
-    : declaration_specifiers ';'
-    | declaration_specifiers init_declarator_list ';'
+/* declaration_list
+    : declaration_list declaration_statement
+    | declaration_statement
+    ; */
+
+declaration_statement
+    : declaration_specifier init_declarator_list ';'
     ;
 
-declaration_specifiers
+declaration_specifier
     : type_specifier 
-    | type_specifier declaration_specifiers
-    | '[' declaration_specifiers ']'
-    | '{' declaration_specifiers ':' declaration_specifiers '}' 
+    | '[' declaration_specifier ']'
+    | '{' declaration_specifier ':' declaration_specifier '}' 
     ;
 
 init_declarator_list
@@ -162,11 +165,6 @@ initializer
     : assignment_statement
     ;
 
-declaration_list
-	: declaration
-	| declaration_list declaration
-	;
-
 /* push_pop_statement
     : IDENTIFIER map_array BACKWARD_ACCESS '[' expression ']'
     | '[' expression ']' FORWARD_ACCESS IDENTIFIER map_array
@@ -181,21 +179,19 @@ declaration_list
 statement
 	: assignment_statement ';'
 	| compound_statement
-	/* | selection_statement */
 	| iteration_statement
 	| jump_statement
     | print_statement
     /* | push_pop_statement */
     | if_else_statement
+    | declaration_statement
+    | function_declaration
 	;
 
 compound_statement
 	: '<' '>'
 	| '<' statement_list '>'
-	| '<' declaration_list '>'
-	| '<' declaration_list statement_list '>'
 	;
-
 
 statement_list
 	: statement
@@ -207,13 +203,13 @@ expression_statement
 	| expression ';'
 	;
 
-/* selection_statement
-	: 
-	; */
-
 iteration_statement
-    : LOOP '(' expression_statement assignment_statement ')' ':' statement FINALLY ':' statement
-    | LOOP '(' expression_statement expression_statement assignment_statement ')' ':' statement FINALLY ':' statement
+    : LOOP '(' assignment_statement ';' expression_statement assignment_statement ')' ':' compound_statement
+    | LOOP '(' assignment_statement ';' expression_statement assignment_statement ')' ':' compound_statement FINALLY ':' statement
+    | LOOP '(' declaration_statement expression_statement assignment_statement ')' ':' compound_statement 
+    | LOOP '(' declaration_statement expression_statement assignment_statement ')' ':' compound_statement FINALLY ':' statement 
+    | LOOP '(' ';' expression_statement assignment_statement ')' ':' compound_statement FINALLY ':' statement 
+    | LOOP '(' ';' expression_statement assignment_statement ')' ':' compound_statement
 	;
 
 jump_statement
@@ -236,8 +232,15 @@ if_else_statement
     ;
 
 function_declaration
-    : FUNC IDENTIFIER '(' ';'  ')'
+    : FUNC IDENTIFIER '(' parameter_list ';' declaration_specifier ')' compound_statement
 
+parameter_list
+    : parameter
+    | parameter_list ',' parameter
+    ;
+
+parameter
+    : declaration_specifier IDENTIFIER
 %%
 
 int yywrap(){
