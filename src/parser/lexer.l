@@ -38,6 +38,7 @@ L			[a-zA-Z_]
 "big"           {count(); return BIG;}
 "small"         {count(); return SMALL;}
 "constant"      {count(); return CONST;}
+"void"      {count(); return VOID;}
 
 "->"            {count(); return FORWARD_ACCESS;}
 "<-"            {count(); return BACKWARD_ACCESS;}

@@ -2,13 +2,21 @@ List of To Do's
 
 ----------------------------------------------------------
 Lexical Analyser:
-- Everything
+- added void keyword
 
 
 ----------------------------------------------------------
 Syntax Analyser:
 - get rid of accessed_name
 - fix unary expression
+- add size[x]
+- adding assigment statement to statement
+- removed set_statement_list from statement_list
+- changed expression to assigment_statement in itr statement
+- is it supposed to be expression_statements in itr statement?
+- push_pop giving sr conflicts
+- implement atleast one return statement
+- removed if keyword
 
 
 ----------------------------------------------------------

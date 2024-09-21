@@ -7,8 +7,8 @@
 %token OR AND NOT
 %token LE_OP GE_OP NE_OP EQ_OP
 %token FORWARD_ACCESS BACKWARD_ACCESS
-%token INT FLOAT BIG SMALL CONST
-%token SET IF ELSE SIZE LOOP FINALLY RETURN FUNC PRINT
+%token INT FLOAT BIG SMALL CONST VOID
+%token SET ELSE SIZE LOOP FINALLY RETURN FUNC PRINT
 
 %start start_rule
 %%
@@ -120,9 +120,9 @@ expression
     ;
 
 assignment_statement 
-    : expression
+    : expression 
     | IDENTIFIER map_array '=' expression 
-    | IDENTIFIER '=' expression 
+    | IDENTIFIER '=' expression
     ;
 
 declaration
@@ -162,24 +162,31 @@ initializer
     : assignment_statement
     ;
 
-push_pop_statement
-    : postfix_expression BACKWARD_ACCESS '[' expression ']'
-    | '[' expression ']' FORWARD_ACCESS postfix_expression
-    | postfix_expression FORWARD_ACCESS '[' postfix_expression ']'
-    | '[' postfix_expression ']' BACKWARD_ACCESS postfix_expression
-    | postfix_expression FORWARD_ACCESS '[' ']'
-    | '[' ']' BACKWARD_ACCESS postfix_expression
-    ;
+declaration_list
+	: declaration
+	| declaration_list declaration
+	;
+
+/* push_pop_statement
+    : IDENTIFIER map_array BACKWARD_ACCESS '[' expression ']'
+    | '[' expression ']' FORWARD_ACCESS IDENTIFIER map_array
+    | IDENTIFIER map_array FORWARD_ACCESS '[' IDENTIFIER ']'
+    | IDENTIFIER map_array FORWARD_ACCESS '[' IDENTIFIER map_array ']'
+    | '[' IDENTIFIER ']' BACKWARD_ACCESS IDENTIFIER map_array
+    | '[' IDENTIFIER map_array ']' BACKWARD_ACCESS IDENTIFIER map_array
+    | IDENTIFIER map_array FORWARD_ACCESS '[' ']'
+    | '[' ']' BACKWARD_ACCESS IDENTIFIER map_array
+    ; */
 
 statement
-	: expression_statement
+	: assignment_statement ';'
 	| compound_statement
 	/* | selection_statement */
 	| iteration_statement
 	| jump_statement
     | print_statement
-    | set_statement_list
-    | push_pop_statement
+    /* | push_pop_statement */
+    | if_else_statement
 	;
 
 compound_statement
@@ -189,10 +196,6 @@ compound_statement
 	| '<' declaration_list statement_list '>'
 	;
 
-declaration_list
-	: declaration
-	| declaration_list declaration
-	;
 
 statement_list
 	: statement
@@ -209,18 +212,31 @@ expression_statement
 	; */
 
 iteration_statement
-    : LOOP '(' expression_statement expression ')' ':' statement FINALLY ':' statement
-    | LOOP '(' expression_statement expression_statement expression ')' ':' statement FINALLY ':' statement
+    : LOOP '(' expression_statement assignment_statement ')' ':' statement FINALLY ':' statement
+    | LOOP '(' expression_statement expression_statement assignment_statement ')' ':' statement FINALLY ':' statement
 	;
 
 jump_statement
-	: RETURN ';'
+	: RETURN VOID ';'
 	| RETURN expression ';'
 	;
 
 print_statement
     : PRINT '(' expression ')'
     ;
+
+chaining_if_else 
+    : expression '?' statement_list chaining_if_else
+    | expression '?' statement_list
+    | expression '?' statement_list ELSE ':' statement_list
+    ;
+
+if_else_statement
+    : '<' chaining_if_else '>'
+    ;
+
+function_declaration
+    : FUNC IDENTIFIER '(' ';'  ')'
 
 %%
 
