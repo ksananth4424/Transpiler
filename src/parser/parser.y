@@ -143,11 +143,11 @@ set_up_section
     | set_up_section set_statement          {$$ = $1;}
     ;
 
-function_declaration
-    : FUNC IDENTIFIER '(' parameter_list ';' declaration_specifier ')' compound_statement   {
-        $$ = $6 + " " + $2 + "(" + $4 + ") " + $8; {fprintf(parser_log, "%d : Function Declaration\n", yylineno);}
-    }
+function_declaration:
+    {fprintf(parser_log, "%d : Function Delaration\n", yylineno);} FUNC IDENTIFIER '(' parameter_list ';' declaration_specifier ')' compound_statement   
+    {$$ = $7 + " " + $3 + "(" + $5 + ") " + $9;}
     ;
+
 parameter_list
     : parameter                         {$$ = $1;}
     | parameter_list ',' parameter      {$$ = $1 + ", " + $3;}
@@ -322,6 +322,9 @@ expression_statement
 	| expression ';'            {$$ = $1 + ";";}
 	;
 
+loop_statement:
+    {fprintf(parser_log, "%d : Loop Statement\n", yylineno);} iteration_statement   {$$ = $2;}
+
 iteration_statement
     : LOOP '(' assignment_statement ';' expression_statement assignment_statement ')' ':' compound_statement                            {$$ = "for(" + $3 + "; " + $5 + " " + $6 + ") " + $9;}
     | LOOP '(' assignment_statement ';' expression_statement assignment_statement ')' ':' compound_statement FINALLY ':' statement      {$$ = "for(" + $3 + "; " + $5 + " " + $6 + ") " + $9 + $12;}
@@ -353,7 +356,7 @@ if_else_statement
 statement
 	: assignment_statement ';'  {$$ = $1 + ";"; fprintf(parser_log, "%d : Assignment Statement\n", yylineno);}
 	| compound_statement        {$$ = $1;}
-	| iteration_statement       {$$ = $1; fprintf(parser_log, "%d : Loop Statement\n", yylineno);}
+	| loop_statement       {$$ = $1;}
 	| return_statement ';'      {$$ = $1 + ";"; std::cout << $1 << ' '; fprintf(parser_log, "%d : Return Statement\n", yylineno);}
     | print_statement ';'       {$$ = $1 + ";"; fprintf(parser_log, "%d : Print Statement\n", yylineno);}
     | push_pop_statement ';'    {$$ = $1 + ";"; fprintf(parser_log, "%d : Push Pop Statement\n", yylineno);}

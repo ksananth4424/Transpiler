@@ -1,10 +1,10 @@
 1 : Set Statement
 2 : Set Statement
+4 : Function Delaration
 6 : Variable Declaration
+7 : Loop Statement
 8 : Assignment Statement
-9 : Loop Statement
 9 : Return Statement
-10 : Function Declaration
 12 : Variable Declaration
 13 : Push Pop Statement
 13 : Push Pop Statement
