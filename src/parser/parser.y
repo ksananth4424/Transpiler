@@ -1,5 +1,9 @@
 %{
 #include <iostream>
+#include <fstream>
+
+FILE* lexer_log;
+FILE* parser_log;
 
 class stack_type {
 public:
@@ -115,12 +119,17 @@ std::string float_type = "float";
 
 start_rule
     : set_up_section program_body {
-        puts("success");
+        puts("\nsuccess");
         $$ = "#include<bits/stdc++.h>\n" + $1 + "\n" + $2;
-        std::cout << $$ << std::endl;
-        // std::ofstream output("output.cpp");
-        // output << $$;
-        // output.close();
+        std::ofstream output("transpiled_cpp.cpp");
+        if (output.is_open()) {
+            // Write the content to the file
+            output << $$;
+            // Close the file
+            output.close();
+        } else {
+            std::cerr << "Unable to open file for writing" << std::endl;
+        }
     }
 
 program_body
@@ -136,7 +145,7 @@ set_up_section
 
 function_declaration
     : FUNC IDENTIFIER '(' parameter_list ';' declaration_specifier ')' compound_statement   {
-        $$ = $6 + " " + $2 + "(" + $4 + ") " + $8;
+        $$ = $6 + " " + $2 + "(" + $4 + ") " + $8; {fprintf(parser_log, "%d : Function Declaration\n", yylineno);}
     }
     ;
 parameter_list
@@ -148,10 +157,10 @@ parameter
     : declaration_specifier IDENTIFIER  {$$ = $1 + " " + $2;}
 
 set_statement 
-    : SET INT SMALL ';'     {int_type = "int";}
-    | SET INT BIG ';'       {int_type = "long long";}
-    | SET FLOAT SMALL ';'   {float_type = "float";}
-    | SET FLOAT BIG ';'     {float_type = "double";}
+    : SET INT SMALL ';'     {int_type = "int"; fprintf(parser_log, "%d : Set Statement\n", yylineno);}
+    | SET INT BIG ';'       {int_type = "long long"; fprintf(parser_log, "%d : Set Statement\n", yylineno);}
+    | SET FLOAT SMALL ';'   {float_type = "float"; fprintf(parser_log, "%d : Set Statement\n", yylineno);}
+    | SET FLOAT BIG ';'     {float_type = "double"; fprintf(parser_log, "%d : Set Statement\n", yylineno);}
     ;
 
 primary_expression 
@@ -324,7 +333,7 @@ iteration_statement
 
 return_statement
 	: RETURN VOID           {$$ = $1;}
-	| RETURN expression     {$$ = $1 + " " + $2; std::cout << $1;}
+	| RETURN expression     {$$ = $1 + " " + $2; std::cout << $2 << "\n";}
 	;
 
 print_statement
@@ -342,14 +351,14 @@ if_else_statement
     ;
 
 statement
-	: assignment_statement ';'  {$$ = $1 + ";";}
+	: assignment_statement ';'  {$$ = $1 + ";"; fprintf(parser_log, "%d : Assignment Statement\n", yylineno);}
 	| compound_statement        {$$ = $1;}
-	| iteration_statement       {$$ = $1;}
-	| return_statement ';'      {$$ = $1 + ";"; std::cout << $1 << ' ';}
-    | print_statement ';'       {$$ = $1 + ";";}
-    | push_pop_statement ';'    {$$ = $1 + ";";}
-    | if_else_statement         {$$ = $1;}
-    | declaration_statement     {$$ = $1;}
+	| iteration_statement       {$$ = $1; fprintf(parser_log, "%d : Loop Statement\n", yylineno);}
+	| return_statement ';'      {$$ = $1 + ";"; std::cout << $1 << ' '; fprintf(parser_log, "%d : Return Statement\n", yylineno);}
+    | print_statement ';'       {$$ = $1 + ";"; fprintf(parser_log, "%d : Print Statement\n", yylineno);}
+    | push_pop_statement ';'    {$$ = $1 + ";"; fprintf(parser_log, "%d : Push Pop Statement\n", yylineno);}
+    | if_else_statement         {$$ = $1; fprintf(parser_log, "%d : Conditional Statement\n", yylineno);}
+    | declaration_statement     {$$ = $1; fprintf(parser_log, "%d : Variable Declaration\n", yylineno);}
 	;
 
 statement_list
@@ -368,7 +377,7 @@ void yyerror(char* s) {
 }
 
 int main(int argc, char **argv) {
-    if (argc != 2) {
+    /* if (argc != 2) {
         puts("error: usage ./a.out <input_file>");
         return 0;
     }
@@ -376,6 +385,8 @@ int main(int argc, char **argv) {
     if (yyin == NULL) {
         puts("error: couldn't open the file");
         return 0;
-    }
+    } */
+    lexer_log = fopen("lexer_log.txt", "w");
+    parser_log = fopen("parser_log.txt", "w");
     yyparse(); 
 }

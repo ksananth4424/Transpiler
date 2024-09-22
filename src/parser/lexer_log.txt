@@ -1,0 +1,131 @@
+1 : Reserved Word : set
+1 : Type : int
+1 : Type : small
+1 : Punctuation : ;
+2 : Reserved Word : set
+2 : Type : float
+2 : Type : small
+2 : Punctuation : ;
+4 : Reserved Word : func
+4 : Identifier : total_area
+4 : Punctuation : (
+4 : Punctuation : Access Operator : [
+4 : Type : float
+4 : Punctuation : Access Operator : ]
+4 : Identifier : h
+4 : Punctuation : ,
+4 : Punctuation : Access Operator : [
+4 : Type : int
+4 : Punctuation : Access Operator : ]
+4 : Identifier : b
+4 : Punctuation : ;
+4 : Type : float
+4 : Punctuation : )
+5 : Comment : # comment
+5 : Comparision Operator : Punctuation : <
+6 : Type : float
+6 : Identifier : sum
+6 : Assignment Operator : =
+6 : Constant : 0
+6 : Punctuation : ;
+7 : Reserved Word : loop
+7 : Punctuation : (
+7 : Type : int
+7 : Identifier : i
+7 : Assignment Operator : =
+7 : Constant : 0
+7 : Punctuation : ;
+7 : Identifier : i
+7 : Comparision Operator : Punctuation : <
+7 : Reserved Word : size
+7 : Punctuation : Access Operator : [
+7 : Identifier : h
+7 : Punctuation : Access Operator : ]
+7 : Logical Operator : and
+7 : Identifier : i
+7 : Comparision Operator : Punctuation : <
+7 : Reserved Word : size
+7 : Punctuation : Access Operator : [
+7 : Identifier : b
+7 : Punctuation : Access Operator : ]
+7 : Punctuation : ;
+7 : Identifier : i
+7 : Assignment Operator : =
+7 : Identifier : i
+7 : Arithmetic Operator : +
+7 : Constant : 1
+7 : Punctuation : )
+7 : Punctuation : :
+8 : Comparision Operator : Punctuation : <
+8 : Identifier : sum
+8 : Assignment Operator : =
+8 : Identifier : sum
+8 : Arithmetic Operator : +
+8 : Identifier : h
+8 : Punctuation : Access Operator : [
+8 : Identifier : i
+8 : Punctuation : Access Operator : ]
+8 : Arithmetic Operator : *
+8 : Identifier : b
+8 : Punctuation : Access Operator : [
+8 : Identifier : i
+8 : Punctuation : Access Operator : ]
+8 : Punctuation : ;
+8 : Comparision Operator : Punctuation : >
+9 : Reserved Word : return
+9 : Identifier : sum
+9 : Punctuation : ;
+10 : Comparision Operator : Punctuation : >
+12 : Punctuation : Access Operator : [
+12 : Type : float
+12 : Punctuation : Access Operator : ]
+12 : Identifier : h
+12 : Punctuation : ,
+12 : Identifier : b
+12 : Punctuation : ;
+13 : Identifier : h
+13 : Access Operator : <-
+13 : Punctuation : Access Operator : [
+13 : Constant : 0.5
+13 : Punctuation : Access Operator : ]
+13 : Punctuation : ;
+13 : Identifier : b
+13 : Access Operator : <-
+13 : Punctuation : Access Operator : [
+13 : Constant : 3
+13 : Punctuation : Access Operator : ]
+13 : Punctuation : ;
+14 : Identifier : h
+14 : Access Operator : <-
+14 : Punctuation : Access Operator : [
+14 : Constant : 1.5
+14 : Punctuation : Access Operator : ]
+14 : Punctuation : ;
+14 : Identifier : b
+14 : Access Operator : <-
+14 : Punctuation : Access Operator : [
+14 : Constant : 2
+14 : Punctuation : Access Operator : ]
+14 : Punctuation : ;
+15 : Identifier : h
+15 : Access Operator : <-
+15 : Punctuation : Access Operator : [
+15 : Constant : 2.5
+15 : Punctuation : Access Operator : ]
+15 : Punctuation : ;
+15 : Identifier : b
+15 : Access Operator : <-
+15 : Punctuation : Access Operator : [
+15 : Constant : 1
+15 : Punctuation : Access Operator : ]
+15 : Punctuation : ;
+16 : Reserved Word : print
+16 : Punctuation : (
+16 : Identifier : total_area
+16 : Punctuation : (
+16 : Identifier : h
+16 : Punctuation : ,
+16 : Identifier : b
+16 : Punctuation : )
+16 : Punctuation : )
+16 : Punctuation : ;
