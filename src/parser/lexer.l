@@ -37,7 +37,7 @@ L			[a-zA-Z_]
 "big"           {count(); return BIG;}
 "small"         {count(); return SMALL;}
 "constant"      {count(); return CONST;}
-"void"      {count(); return VOID;}
+"void"          {count(); return VOID;}
 
 "->"            {count(); return FORWARD_ACCESS;}
 "<-"            {count(); return BACKWARD_ACCESS;}
@@ -64,7 +64,7 @@ L			[a-zA-Z_]
 "=="            {count(); return EQ_OP;}
 "!"             {count(); return '!';}
 
-{L}({D}|{L})*    {count(); return IDENTIFIER;}
+{L}({D}|{L})*   {count(); return IDENTIFIER;}
 {D}+            {count(); return CONSTANT;}
 {D}+\.{D}*      {count(); return CONSTANT;}
 {D}*\.{D}+      {count(); return CONSTANT;}
@@ -78,4 +78,5 @@ L			[a-zA-Z_]
 
 void count() {
     // ECHO;
+    yylval = yytext;
 }

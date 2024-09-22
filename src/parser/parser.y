@@ -1,6 +1,65 @@
 %{
-#include <stdio.h>
+#include <iostream>
+
+class stack_type {
+public:
+    std::string value;
+    stack_type() {}
+    stack_type(const stack_type& other) {
+        this->value = other.value;
+    }
+
+    stack_type operator=(const stack_type& r) {
+        stack_type res;
+        res.value = this->value = r.value;
+        return res;
+    }
+
+    stack_type operator=(const char* r) {
+        stack_type res;
+        res.value = this->value = r;
+        return res;
+    }
+
+    stack_type operator=(const std::string& r) {
+        stack_type res;
+        res.value = this->value = r;
+        return res;
+    }
+};
+
+stack_type operator+(const stack_type& l, const stack_type& r) {
+    stack_type res;
+    res.value = l.value + r.value;
+    return res;
+}
+
+stack_type operator+(const char* l, const stack_type& r) {
+    stack_type res;
+    res.value = l + r.value;
+    return res;
+}
+
+stack_type operator+(const stack_type& l, const char* r) {
+    stack_type res;
+    res.value = l.value + r;
+    return res;
+}
+
+std::ostream& operator<<(std::ostream& COUT, const stack_type& r) {
+    COUT << r.value;
+    return COUT;
+}
+
+#define YYSTYPE stack_type
 #include "lex.yy.c"
+
+extern int yywrap();
+extern void yyerror(char*);
+std::string int_type = "int";
+std::string float_type = "float";
+
+
 %}
 
 %token IDENTIFIER CONSTANT
@@ -10,253 +69,292 @@
 %token INT FLOAT BIG SMALL CONST VOID
 %token SET ELSE SIZE LOOP FINALLY RETURN FUNC PRINT
 
+
 %start start_rule
+/* %type <n> start_rule */
+/* %type <n> program_body */
+/* %type <n> set_up_section */
+/* %type <n> function_declaration */
+/* %type <n> parameter_list */
+/* %type <n> parameter */
+/* %type <n> primary_expression */
+/* %type <n> function_call */
+/* %type <n> argument_expression_list */
+/* %type <n> map_array */
+/* %type <n> postfix_expression */
+/* %type <n> unary_expression */
+/* %type <n> multiplicative_expression */
+/* %type <n> additive_expression */
+/* %type <n> relational_expression */
+/* %type <n> equality_expression */
+/* %type <n> and_expression */
+/* %type <n> exclusive_or_expression */
+/* %type <n> inclusive_or_expression */
+/* %type <n> logical_and_expression */
+/* %type <n> logical_or_expression */
+/* %type <n> expression */
+/* %type <n> assignment_statement */
+/* %type <n> declaration_statement */
+/* %type <n> declaration_specifier */
+/* %type <n> init_declarator_list */
+/* %type <n> init_declarator */
+/* %type <n> type_specifier */
+/* %type <n> declarator */
+/* %type <n> initializer */
+/* %type <n> push_pop_statement */
+/* %type <n> compound_statement */
+/* %type <n> expression_statement */
+/* %type <n> iteration_statement */
+/* %type <n> return_statement */
+/* %type <n> print_statement */
+/* %type <n> chaining_if_else */
+/* %type <n> if_else_statement */
+/* %type <n> statement */
+/* %type <n> statement_list */
 %%
 
 start_rule
-    : set_up_section program_body {puts("success");}
+    : set_up_section program_body {
+        puts("success");
+        $$ = "#include<bits/stdc++.h>\n" + $1 + "\n" + $2;
+        std::cout << $$ << std::endl;
+        // std::ofstream output("output.cpp");
+        // output << $$;
+        // output.close();
+    }
 
 program_body
-    : statement_list
-    |
+    : statement_list    {$$ = "\nint main() {\n" + $1 + "\n}";}
+    |                   {$$ = "";}
     ;
 
 set_up_section
-    : 
-    | set_up_section function_declaration
-    | set_up_section set_statement
+    :                                       {$$ = "";}
+    | set_up_section function_declaration   {$$ = $1 + "\n" + $2;}
+    | set_up_section set_statement          {$$ = $1;}
     ;
 
 function_declaration
-    : FUNC IDENTIFIER '(' parameter_list ';' declaration_specifier ')' compound_statement
-
+    : FUNC IDENTIFIER '(' parameter_list ';' declaration_specifier ')' compound_statement   {
+        $$ = $6 + " " + $2 + "(" + $4 + ") " + $8;
+    }
+    ;
 parameter_list
-    : parameter
-    | parameter_list ',' parameter
+    : parameter                         {$$ = $1;}
+    | parameter_list ',' parameter      {$$ = $1 + ", " + $3;}
     ;
 
 parameter
-    : declaration_specifier IDENTIFIER
+    : declaration_specifier IDENTIFIER  {$$ = $1 + " " + $2;}
 
 set_statement 
-    : SET INT SMALL ';'
-    | SET INT BIG ';'
-    | SET FLOAT SMALL ';'
-    | SET FLOAT BIG ';'
+    : SET INT SMALL ';'     {int_type = "int";}
+    | SET INT BIG ';'       {int_type = "long long";}
+    | SET FLOAT SMALL ';'   {float_type = "float";}
+    | SET FLOAT BIG ';'     {float_type = "double";}
     ;
 
 primary_expression 
-    : '(' expression ')'
-    | IDENTIFIER
-    | CONSTANT 
+    : '(' expression ')'    {$$ = "(" + $2 + ")";}
+    | IDENTIFIER            {$$ = $1;}
+    | CONSTANT              {$$ = $1;}
     ;
 
 function_call
-    : IDENTIFIER '(' ')'
-    | IDENTIFIER '(' argument_expression_list ')'
+    : IDENTIFIER '(' ')'                            {$$ = $1 + "()";}
+    | IDENTIFIER '(' argument_expression_list ')'   {$$ = $1 + "(" + $3 + ")";}
     ;
 
 argument_expression_list
-    : expression
-    | argument_expression_list ',' expression
+    : expression                                {$$ = $1;}
+    | argument_expression_list ',' expression   {$$ = $1 + ", " + $3;}
     ;    
 
 map_array
-    : map_array '[' expression ']'
-    | '[' expression ']'
+    : '[' expression ']'                        {$$ = "[" + $2 + "]";}
+    | map_array '[' expression ']'              {$$ = $1 + "[" + $3 + "]";}
     ;
 
 postfix_expression 
-    : IDENTIFIER map_array
-    | function_call map_array
-    | function_call
-    | primary_expression
+    : IDENTIFIER map_array                      {$$ = $1 + $2;}
+    | function_call map_array                   {$$ = $1 + $2;}
+    | function_call                             {$$ = $1;}  
+    | primary_expression                        {$$ = $1;}
     ;
 
 unary_expression 
-    : NOT unary_expression
-    | '~' unary_expression
-    | '-' unary_expression
-    | '+' unary_expression
-    | SIZE '[' postfix_expression ']'
-    |  postfix_expression
+    : NOT unary_expression                      {$$ = "!" + $2;}
+    | '~' unary_expression                      {$$ = "~" + $2;}
+    | '-' unary_expression                      {$$ = "-" + $2;}
+    | '+' unary_expression                      {$$ = "+" + $2;}
+    | SIZE '[' postfix_expression ']'           {$$ = $3 + ".size()";}
+    |  postfix_expression                       {$$ = $1;}
     ;
 
 multiplicative_expression 
-    : multiplicative_expression '*' unary_expression
-    | multiplicative_expression '/' unary_expression
-    | multiplicative_expression '%' unary_expression
-    | unary_expression
+    : unary_expression                                  {$$ = $1;}
+    | multiplicative_expression '*' unary_expression    {$$ = $1 + " * " + $3;}
+    | multiplicative_expression '/' unary_expression    {$$ = $1 + " / " + $3;}
+    | multiplicative_expression '%' unary_expression    {$$ = $1 + " % " + $3;}
     ;
 
 additive_expression 
-    : additive_expression '+' multiplicative_expression
-    | additive_expression '-' multiplicative_expression
-    | multiplicative_expression
+    : multiplicative_expression                         {$$ = $1;}
+    | additive_expression '-' multiplicative_expression {$$ = $1 + " - " + $3;}
+    | additive_expression '+' multiplicative_expression {$$ = $1 + " + " + $3;}
     ;
     
 relational_expression
-	: additive_expression
-	| relational_expression '<' additive_expression
-	| relational_expression '>' additive_expression
-	| relational_expression LE_OP additive_expression
-	| relational_expression GE_OP additive_expression
+	: additive_expression                               {$$ = $1;}   
+	| relational_expression '<' additive_expression     {$$ = $1 + " < " + $3;}
+	| relational_expression '>' additive_expression     {$$ = $1 + " > " + $3;}
+	| relational_expression LE_OP additive_expression   {$$ = $1 + " <= " + $3;}
+	| relational_expression GE_OP additive_expression   {$$ = $1 + " >= " + $3;}
 	;
 
 equality_expression
-	: relational_expression
-	| equality_expression EQ_OP relational_expression
-	| equality_expression NE_OP relational_expression
+	: relational_expression                             {$$ = $1;}
+	| equality_expression EQ_OP relational_expression   {$$ = $1 + " == " + $3;}
+	| equality_expression NE_OP relational_expression   {$$ = $1 + " != " + $3;}
 	;
 
 and_expression
-	: equality_expression
-	| and_expression '&' equality_expression
+	: equality_expression                               {$$ = $1;}
+	| and_expression '&' equality_expression            {$$ = $1 + " & " + $3;}
 	;
 
 exclusive_or_expression
-	: and_expression
-	| exclusive_or_expression '^' and_expression
+	: and_expression                                    {$$ = $1;}
+	| exclusive_or_expression '^' and_expression        {$$ = $1 + " ^ " + $3;}
 	;
 
 inclusive_or_expression
-	: exclusive_or_expression
-	| inclusive_or_expression '|' exclusive_or_expression
+	: exclusive_or_expression                               {$$ = $1;}
+	| inclusive_or_expression '|' exclusive_or_expression   {$$ = $1 + " | " + $3;}
 	;
 
 logical_and_expression
-	: inclusive_or_expression
-	| logical_and_expression AND inclusive_or_expression
+	: inclusive_or_expression                               {$$ = $1;}
+	| logical_and_expression AND inclusive_or_expression    {$$ = $1 + " && " + $3;}
 	;
 
 logical_or_expression
-	: logical_and_expression
-	| logical_or_expression OR logical_and_expression
+	: logical_and_expression                                {$$ = $1;}
+	| logical_or_expression OR logical_and_expression       {$$ = $1 + " || " + $3;}
 	;
 
 expression 
-    : logical_or_expression
+    : logical_or_expression                                 {$$ = $1;}
     ;
 
-assignment_statement 
-    : expression 
-    | IDENTIFIER map_array '=' expression 
-    | IDENTIFIER '=' expression
+assignment_statement    
+    : expression                                            {$$ = $1;}
+    | IDENTIFIER map_array '=' expression                   {$$ = $1 + $2 + " = " + $4;}
+    | IDENTIFIER '=' expression                             {$$ = $1 + " = " + $3;}
     ;
 
 declaration_statement
-    : declaration_specifier init_declarator_list ';'
+    : declaration_specifier init_declarator_list ';'        {$$ = $1 + " " + $2 + ";";}
     ;
 
 declaration_specifier
-    : type_specifier 
-    | '[' declaration_specifier ']'
-    | '{' declaration_specifier ':' declaration_specifier '}' 
+    : type_specifier                                            {$$ = $1;}
+    | '[' declaration_specifier ']'                             {$$ = "std::deque<" + $2 + ">";} 
+    | '{' declaration_specifier ':' declaration_specifier '}'   {$$ = "std::map<" + $2 + ">";} 
     ;
 
 init_declarator_list
-    : init_declarator
-    | init_declarator_list ',' init_declarator
+    : init_declarator                               {$$ = $1;}
+    | init_declarator_list ',' init_declarator      {$$ = $1 + ", " + $3;}
     ;
 
 init_declarator
-    : declarator
-    | declarator '=' initializer
+    : declarator                    {$$ = $1;}
+    | declarator '=' initializer    {$$ = $1 + " = " + $3;}
     ;
 
 type_specifier
-    : INT
-    | FLOAT
-    | INT CONST
-    | FLOAT CONST
+    : INT           {$$ = int_type;}
+    | FLOAT         {$$ = float_type;}
+    | INT CONST     {$$ = "const " + int_type;}
+    | FLOAT CONST   {$$ = "const " + float_type;}
     ;
 
 declarator
-    : IDENTIFIER
+    : IDENTIFIER    {$$ = $1;}
     ;
 
 initializer
-    : assignment_statement
+    : assignment_statement  {$$ = $1;}
     ;
 
-/* push_pop_statement
-    : IDENTIFIER map_array BACKWARD_ACCESS '[' expression ']'
-    | '[' expression ']' FORWARD_ACCESS IDENTIFIER map_array
-    | IDENTIFIER map_array FORWARD_ACCESS '[' IDENTIFIER ']'
-    | IDENTIFIER map_array FORWARD_ACCESS '[' IDENTIFIER map_array ']'
-    | '[' IDENTIFIER ']' BACKWARD_ACCESS IDENTIFIER map_array
-    | '[' IDENTIFIER map_array ']' BACKWARD_ACCESS IDENTIFIER map_array
-    | IDENTIFIER map_array FORWARD_ACCESS '[' ']'
-    | '[' ']' BACKWARD_ACCESS IDENTIFIER map_array
-    ;  */
-
 push_pop_statement
-    : IDENTIFIER BACKWARD_ACCESS '[' expression ']'
-    | IDENTIFIER map_array BACKWARD_ACCESS '[' expression ']'
-    | '[' expression ']' FORWARD_ACCESS IDENTIFIER
-    | '[' expression ']' FORWARD_ACCESS IDENTIFIER map_array
-    | IDENTIFIER FORWARD_ACCESS '[' expression ']'
-    | IDENTIFIER map_array FORWARD_ACCESS '[' expression ']'
-    | '[' expression ']' BACKWARD_ACCESS IDENTIFIER
-    | '[' expression ']' BACKWARD_ACCESS IDENTIFIER map_array
-    | IDENTIFIER FORWARD_ACCESS '[' ']'
-    | IDENTIFIER map_array FORWARD_ACCESS '[' ']'
-    | '[' ']' BACKWARD_ACCESS IDENTIFIER
-    | '[' ']' BACKWARD_ACCESS IDENTIFIER map_array
+    : IDENTIFIER BACKWARD_ACCESS '[' expression ']'             {$$ = $1 + ".push_back(" + $4 + ")";}
+    | IDENTIFIER map_array BACKWARD_ACCESS '[' expression ']'   {$$ = $1 + $2 + ".push_back(" + $5 + ")";}
+    | '[' expression ']' FORWARD_ACCESS IDENTIFIER              {$$ = $5 + ".push_front(" + $2 + ")";}
+    | '[' expression ']' FORWARD_ACCESS IDENTIFIER map_array    {$$ = $5 + $6 + ".push_front(" + $2 + ")";}
+    | IDENTIFIER FORWARD_ACCESS '[' expression ']'              {$$ = $4 + " = " + $1 + ".back();\n" + $1 + ".pop_back()";}
+    | IDENTIFIER map_array FORWARD_ACCESS '[' expression ']'    {$$ = $5 + " = " + $1 + $2 + ".back();\n" + $1 + $2 + ".pop_back()";}
+    | '[' expression ']' BACKWARD_ACCESS IDENTIFIER             {$$ = $2 + " = " + $5 + ".front();\n" + $5 + ".pop_front()";}
+    | '[' expression ']' BACKWARD_ACCESS IDENTIFIER map_array   {$$ = $2 + " = " + $5 + $6 + ".front();\n" + $5 + $6 + ".pop_front()";}
+    | IDENTIFIER FORWARD_ACCESS '[' ']'                         {$$ = $1 + ".pop_back()";}
+    | IDENTIFIER map_array FORWARD_ACCESS '[' ']'               {$$ = $1 + $2 + ".pop_back()";}
+    | '[' ']' BACKWARD_ACCESS IDENTIFIER                        {$$ = $4 + ".pop_front()";}
+    | '[' ']' BACKWARD_ACCESS IDENTIFIER map_array              {$$ = $4 + $5 + ".pop_front()";}
     ; 
 
 compound_statement
-	: '<' '>'
-	| '<' statement_list '>'
+	: '<' '>'                   {$$ = "{}";}
+	| '<' statement_list '>'    {$$ = "{\n" + $2 + "\n}";}
 	;
 
 expression_statement
-	: ';'
-	| expression ';'
+	: ';'                       {$$ = ";";}
+	| expression ';'            {$$ = $1 + ";";}
 	;
 
 iteration_statement
-    : LOOP '(' assignment_statement ';' expression_statement assignment_statement ')' ':' compound_statement
-    | LOOP '(' assignment_statement ';' expression_statement assignment_statement ')' ':' compound_statement FINALLY ':' statement
-    | LOOP '(' declaration_statement expression_statement assignment_statement ')' ':' compound_statement 
-    | LOOP '(' declaration_statement expression_statement assignment_statement ')' ':' compound_statement FINALLY ':' statement 
-    | LOOP '(' ';' expression_statement assignment_statement ')' ':' compound_statement FINALLY ':' statement 
-    | LOOP '(' ';' expression_statement assignment_statement ')' ':' compound_statement
+    : LOOP '(' assignment_statement ';' expression_statement assignment_statement ')' ':' compound_statement                            {$$ = "for(" + $3 + "; " + $5 + " " + $6 + ") " + $9;}
+    | LOOP '(' assignment_statement ';' expression_statement assignment_statement ')' ':' compound_statement FINALLY ':' statement      {$$ = "for(" + $3 + "; " + $5 + " " + $6 + ") " + $9 + $12;}
+    | LOOP '(' declaration_statement expression_statement assignment_statement ')' ':' compound_statement                               {$$ = "for(" + $3 + " " + $4 + " " + $5 + ") " + $8;}
+    | LOOP '(' declaration_statement expression_statement assignment_statement ')' ':' compound_statement FINALLY ':' statement         {$$ = "for(" + $3 + " " + $4 + " " + $5 + ") " + $8 + $11;}
+    | LOOP '(' ';' expression_statement assignment_statement ')' ':' compound_statement                                                 {$$ = "for( ;" + $4 + " " + $5 + ") " + $8;}
+    | LOOP '(' ';' expression_statement assignment_statement ')' ':' compound_statement FINALLY ':' statement                           {$$ = "for( ;" + $4 + " " + $5 + ") " + $8 + $11;}
 	;
 
-jump_statement
-	: RETURN VOID 
-	| RETURN expression 
+return_statement
+	: RETURN VOID           {$$ = $1;}
+	| RETURN expression     {$$ = $1 + " " + $2; std::cout << $1;}
 	;
 
 print_statement
-    : PRINT '(' expression ')'
+    : PRINT '(' expression ')'  {$$ = "std::cout << " + $3 + " << '\\n'";}
     ;
 
 chaining_if_else 
-    : expression '?' statement_list chaining_if_else
-    | expression '?' statement_list
-    | expression '?' statement_list ELSE ':' statement_list
+    : expression '?' statement_list                             {$$ = "if (" + $1 + ") {\n " + $3 + "\n}";}
+    | expression '?' statement_list ELSE ':' statement_list     {$$ = "if (" + $1 + ") {\n " + $3 + "\n} else {\n" + $6 + "\n}";}
+    | expression '?' statement_list chaining_if_else            {$$ = "if (" + $1 + ") {\n " + $3 + "\n} else " + $4;}
     ;
 
 if_else_statement
-    : '<' chaining_if_else '>'
+    : '<' chaining_if_else '>'  {$$ = $2;}
     ;
 
 statement
-	: assignment_statement ';'
-	| compound_statement
-	| iteration_statement
-	| jump_statement ';'
-    | print_statement ';'
-    | push_pop_statement ';'
-    | if_else_statement
-    | declaration_statement
+	: assignment_statement ';'  {$$ = $1 + ";";}
+	| compound_statement        {$$ = $1;}
+	| iteration_statement       {$$ = $1;}
+	| return_statement ';'      {$$ = $1 + ";"; std::cout << $1 << ' ';}
+    | print_statement ';'       {$$ = $1 + ";";}
+    | push_pop_statement ';'    {$$ = $1 + ";";}
+    | if_else_statement         {$$ = $1;}
+    | declaration_statement     {$$ = $1;}
 	;
 
 statement_list
-	: statement
-	| statement_list statement
+	: statement                 {$$ = $1;}
+	| statement_list statement  {$$ = $1 + "\n" + $2;}
 	;
 
 %%
