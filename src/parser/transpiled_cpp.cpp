@@ -1,6 +1,6 @@
 #include<bits/stdc++.h>
 
-float total_area(std::deque<float> h, std::deque<int> b) {
+float total_area(std::deque<float> h, std::deque<float> b) {
 float sum = 0;
 for(int i = 0; i < h.size() && i < b.size(); i = i + 1) {
 sum = sum + h[i] * b[i];

@@ -1,7 +1,7 @@
 set int small;
 set float small;
 
-func total_area ( [float] h, [int] b ; float)  # comment
+func total_area ( [float] h, [float] b ; float)  # comment
 <
   float sum=0;
   loop (int i=0 ; i < size[h] and i < size[b]; i=i+1) :  

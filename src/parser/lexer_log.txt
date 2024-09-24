@@ -15,7 +15,7 @@
 4 : Identifier : h
 4 : Punctuation : ,
 4 : Punctuation : Access Operator : [
-4 : Type : int
+4 : Type : float
 4 : Punctuation : Access Operator : ]
 4 : Identifier : b
 4 : Punctuation : ;

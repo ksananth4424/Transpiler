@@ -336,7 +336,7 @@ iteration_statement
 
 return_statement
 	: RETURN VOID           {$$ = $1;}
-	| RETURN expression     {$$ = $1 + " " + $2; std::cout << $2 << "\n";}
+	| RETURN expression     {$$ = $1 + " " + $2;}
 	;
 
 print_statement
@@ -356,7 +356,7 @@ if_else_statement
 statement
 	: assignment_statement ';'  {$$ = $1 + ";"; fprintf(parser_log, "%d : Assignment Statement\n", yylineno);}
 	| compound_statement        {$$ = $1;}
-	| loop_statement       {$$ = $1;}
+	| loop_statement            {$$ = $1;}
 	| return_statement ';'      {$$ = $1 + ";"; std::cout << $1 << ' '; fprintf(parser_log, "%d : Return Statement\n", yylineno);}
     | print_statement ';'       {$$ = $1 + ";"; fprintf(parser_log, "%d : Print Statement\n", yylineno);}
     | push_pop_statement ';'    {$$ = $1 + ";"; fprintf(parser_log, "%d : Push Pop Statement\n", yylineno);}
@@ -380,7 +380,7 @@ void yyerror(char* s) {
 }
 
 int main(int argc, char **argv) {
-    /* if (argc != 2) {
+    if (argc != 2) {
         puts("error: usage ./a.out <input_file>");
         return 0;
     }
@@ -388,7 +388,7 @@ int main(int argc, char **argv) {
     if (yyin == NULL) {
         puts("error: couldn't open the file");
         return 0;
-    } */
+    }
     lexer_log = fopen("lexer_log.txt", "w");
     parser_log = fopen("parser_log.txt", "w");
     yyparse(); 
