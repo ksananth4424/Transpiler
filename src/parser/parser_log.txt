@@ -5,13 +5,13 @@
 7 : Loop Statement
 8 : Assignment Statement
 11 : Return Statement
-12 : Return Statement
-13 : Conditional Statement
-16 : Variable Declaration
+15 : Variable Declaration
+16 : Push Pop Statement
+16 : Push Pop Statement
 17 : Push Pop Statement
 17 : Push Pop Statement
 18 : Push Pop Statement
 18 : Push Pop Statement
-19 : Push Pop Statement
-19 : Push Pop Statement
-20 : Print Statement
+19 : Variable Declaration
+20 : Push Pop Statement
+21 : Print Statement

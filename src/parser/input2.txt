@@ -8,8 +8,7 @@ func total_area ( [float] h, [float] b ; float)  # comment
   < sum = sum+h[i]*b[i]; >
   finally:
   <<
-    sum > 0 ? return sum;
-    else: return 0;
+    return void;
   >>
 >
 
@@ -17,4 +16,6 @@ func total_area ( [float] h, [float] b ; float)  # comment
 h<-[0.5]; b<-[3];
 h<-[1.5]; b<-[2];
 h<-[2.5]; b<-[1];
+float x;
+[x[0]] <- h;
 print( total_area(h,b) );

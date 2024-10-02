@@ -75,71 +75,74 @@
 9 : Punctuation : :
 10 : Comparision Operator : Punctuation : <
 10 : Comparision Operator : Punctuation : <
-11 : Identifier : sum
-11 : Comparision Operator : Punctuation : >
-11 : Constant : 0
-11 : Punctuation : ?
 11 : Reserved Word : return
-11 : Identifier : sum
+11 : Type : void
 11 : Punctuation : ;
-12 : Reserved Word : else
-12 : Punctuation : :
-12 : Reserved Word : return
-12 : Constant : 0
-12 : Punctuation : ;
+12 : Comparision Operator : Punctuation : >
+12 : Comparision Operator : Punctuation : >
 13 : Comparision Operator : Punctuation : >
-13 : Comparision Operator : Punctuation : >
-14 : Comparision Operator : Punctuation : >
-16 : Punctuation : Access Operator : [
-16 : Type : float
-16 : Punctuation : Access Operator : ]
+15 : Punctuation : Access Operator : [
+15 : Type : float
+15 : Punctuation : Access Operator : ]
+15 : Identifier : h
+15 : Punctuation : ,
+15 : Identifier : b
+15 : Punctuation : ;
 16 : Identifier : h
-16 : Punctuation : ,
+16 : Access Operator : <-
+16 : Punctuation : Access Operator : [
+16 : Constant : 0.5
+16 : Punctuation : Access Operator : ]
+16 : Punctuation : ;
 16 : Identifier : b
+16 : Access Operator : <-
+16 : Punctuation : Access Operator : [
+16 : Constant : 3
+16 : Punctuation : Access Operator : ]
 16 : Punctuation : ;
 17 : Identifier : h
 17 : Access Operator : <-
 17 : Punctuation : Access Operator : [
-17 : Constant : 0.5
+17 : Constant : 1.5
 17 : Punctuation : Access Operator : ]
 17 : Punctuation : ;
 17 : Identifier : b
 17 : Access Operator : <-
 17 : Punctuation : Access Operator : [
-17 : Constant : 3
+17 : Constant : 2
 17 : Punctuation : Access Operator : ]
 17 : Punctuation : ;
 18 : Identifier : h
 18 : Access Operator : <-
 18 : Punctuation : Access Operator : [
-18 : Constant : 1.5
+18 : Constant : 2.5
 18 : Punctuation : Access Operator : ]
 18 : Punctuation : ;
 18 : Identifier : b
 18 : Access Operator : <-
 18 : Punctuation : Access Operator : [
-18 : Constant : 2
+18 : Constant : 1
 18 : Punctuation : Access Operator : ]
 18 : Punctuation : ;
-19 : Identifier : h
-19 : Access Operator : <-
-19 : Punctuation : Access Operator : [
-19 : Constant : 2.5
-19 : Punctuation : Access Operator : ]
+19 : Type : float
+19 : Identifier : x
 19 : Punctuation : ;
-19 : Identifier : b
-19 : Access Operator : <-
-19 : Punctuation : Access Operator : [
-19 : Constant : 1
-19 : Punctuation : Access Operator : ]
-19 : Punctuation : ;
-20 : Reserved Word : print
-20 : Punctuation : (
-20 : Identifier : total_area
-20 : Punctuation : (
+20 : Punctuation : Access Operator : [
+20 : Identifier : x
+20 : Punctuation : Access Operator : [
+20 : Constant : 0
+20 : Punctuation : Access Operator : ]
+20 : Punctuation : Access Operator : ]
+20 : Access Operator : <-
 20 : Identifier : h
-20 : Punctuation : ,
-20 : Identifier : b
-20 : Punctuation : )
-20 : Punctuation : )
 20 : Punctuation : ;
+21 : Reserved Word : print
+21 : Punctuation : (
+21 : Identifier : total_area
+21 : Punctuation : (
+21 : Identifier : h
+21 : Punctuation : ,
+21 : Identifier : b
+21 : Punctuation : )
+21 : Punctuation : )
+21 : Punctuation : ;

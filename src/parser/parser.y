@@ -1,6 +1,7 @@
 %{
 #include <iostream>
 #include <fstream>
+#include <regex>
 
 FILE* lexer_log;
 FILE* parser_log;
@@ -34,12 +35,6 @@ int contains_return(const std::string& code) {
 %left '|'
 %left AND
 %left OR
-
-/* %union {
-    std::string str;
-} */
-
-/* %type <str> start_rule program_body set_up_section function_declaration parameter_list parameter set_statement primary_expression function_call argument_expression_list map_array postfix_expression unary_expression expression assignment_statement lhs_expression declaration_statement declaration_specifier init_declarator_list init_declarator type_specifier declarator initializer push_pop_statement compound_statement optional_expression loop_statement iteration_statement optional_finally optional_assignment return_statement print_statement chaining_if_else if_else_statement statement statement_list */
 
 %start start_rule
 %%
@@ -200,8 +195,16 @@ initializer
 push_pop_statement
     : lhs_expression BACKWARD_ACCESS '[' expression ']'             {$$ = $1 + ".push_back(" + $4 + ")";}
     | '[' expression ']' FORWARD_ACCESS lhs_expression              {$$ = $5 + ".push_front(" + $2 + ")";}
-    | lhs_expression FORWARD_ACCESS '[' expression ']'              {$$ = $4 + " = " + $1 + ".back();\n" + $1 + ".pop_back()";}
-    | '[' expression ']' BACKWARD_ACCESS lhs_expression             {$$ = $2 + " = " + $5 + ".front();\n" + $5 + ".pop_front()";}
+    | lhs_expression FORWARD_ACCESS '[' lhs_expression ']'          {$$ = $4 + " = " + $1 + ".back();\n" + $1 + ".pop_back()";}
+    | '[' expression ']' BACKWARD_ACCESS lhs_expression             
+    {
+        $$ = $2 + " = " + $5 + ".front();\n" + $5 + ".pop_front()";
+        std::regex re{R"~([a-zA-Z_]([a-zA-Z_]|[0-9])*(\[.*\])*)~"};
+        if (!std::regex_match($2, re)) {
+            std::cout << "syntax error\n" << $2 << ' ';
+            exit(0);
+        }
+    }
     | lhs_expression FORWARD_ACCESS '[' ']'                         {$$ = $1 + ".pop_back()";}
     | '[' ']' BACKWARD_ACCESS lhs_expression                        {$$ = $4 + ".pop_front()";}
     ; 
@@ -220,9 +223,9 @@ loop_statement:
     {fprintf(parser_log, "%d : Loop Statement\n", yylineno);} iteration_statement   {$$ = $2;}
 
 iteration_statement
-    : LOOP '(' assignment_statement ';' optional_expression ';' optional_assignment ')' ':' compound_statement optional_finally      {$$ = $3 + ";\n" + "while(" + $5 + ") " + $10.substr(0, $10.size() - 1) + $7 + ";" + ($11.size() == 0 ? "\n}" : "\nif (!" + $5 + ") " + $11 + "\n}");}
-    | LOOP '(' declaration_statement ';' optional_expression ';' optional_assignment ')' ':' compound_statement optional_finally     {$$ = $3 + ";\n" + "while(" + $5 + ") " + $10.substr(0, $10.size() - 1) + $7 + ";" + ($11.size() == 0 ? "\n}" : "\nif (!(" + $5 + ")) " + $11 + "\n}");}
-    | LOOP '(' ';' optional_expression ';' optional_assignment ')' ':' compound_statement optional_finally                           {$$ = "while(" + $4 + ") " + $10.substr(0, $9.size() - 1) + $6 + ";" + ($10.size() == 0 ? "\n}" : "\nif (!" + $4 + ") " + $10 + "\n}");}
+    : LOOP '(' assignment_statement ';' optional_expression ';' optional_assignment ')' ':' compound_statement optional_finally      {$$ = "for(" + $3 + ";" + $5 + ";) " + $10.substr(0, $10.size() - 1) + $7 + ";" + ($11.size() == 0 ? "\n}" : "\nif (!(" + $5 + ")) " + $11 + "\n}");}
+    | LOOP '(' declaration_statement ';' optional_expression ';' optional_assignment ')' ':' compound_statement optional_finally     {$$ = "for(" + $3 + ";" + $5 + ";) " + $10.substr(0, $10.size() - 1) + $7 + ";" + ($11.size() == 0 ? "\n}" : "\nif (!(" + $5 + ")) " + $11 + "\n}");}
+    | LOOP '(' ';' optional_expression ';' optional_assignment ')' ':' compound_statement optional_finally                           {$$ = "for(;" + $4 + ";) " + $10.substr(0, $9.size() - 1) + $6 + ";" + ($10.size() == 0 ? "\n}" : "\nif (!(" + $4 + ")) " + $10 + "\n}");}
 	;
 
 optional_finally
