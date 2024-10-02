@@ -6,6 +6,11 @@ func total_area ( [float] h, [float] b ; float)  # comment
   float sum=0;
   loop (int i=0 ; i < size[h] and i < size[b]; i=i+1) :  
   < sum = sum+h[i]*b[i]; >
+  finally:
+  <<
+    sum > 0 ? return sum;
+    else: return 0;
+  >>
 >
 
 [float] h, b;
