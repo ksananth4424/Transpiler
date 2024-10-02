@@ -71,7 +71,7 @@ L			[a-zA-Z_]
 {D}+\.{D}*      {count(); fprintf(lexer_log, "%d : Constant : %s\n", yylineno, yytext); return CONSTANT;}
 {D}*\.{D}+      {count(); fprintf(lexer_log, "%d : Constant : %s\n", yylineno, yytext); return CONSTANT;}
 
-#.*\n           ; {fprintf(lexer_log, "%d : Comment : %s", yylineno, yytext);}
+#.*           ; {fprintf(lexer_log, "%d : Comment : %s", yylineno, yytext);}
 [ \t\v\n\f]     {}
 .               {/* Ignore bad characters */}
 

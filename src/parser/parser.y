@@ -13,6 +13,9 @@ extern void yyerror(char*);
 std::string int_type = "int";
 std::string float_type = "float";
 
+int contains_return(const std::string& code) {
+    return code.find("return") != std::string::npos;
+}
 %}
 
 %token IDENTIFIER CONSTANT
@@ -32,12 +35,18 @@ std::string float_type = "float";
 %left AND
 %left OR
 
+/* %union {
+    std::string str;
+} */
+
+/* %type <str> start_rule program_body set_up_section function_declaration parameter_list parameter set_statement primary_expression function_call argument_expression_list map_array postfix_expression unary_expression expression assignment_statement lhs_expression declaration_statement declaration_specifier init_declarator_list init_declarator type_specifier declarator initializer push_pop_statement compound_statement optional_expression loop_statement iteration_statement optional_finally optional_assignment return_statement print_statement chaining_if_else if_else_statement statement statement_list */
+
 %start start_rule
 %%
 
 start_rule
     : set_up_section program_body {
-        puts("\nsuccess");
+        puts("success");
         $$ = "#include<bits/stdc++.h>\n" + $1 + "\n" + $2;
         std::ofstream output("transpiled_cpp.cpp");
         if (output.is_open()) {
@@ -63,7 +72,13 @@ set_up_section
 
 function_declaration:
     {fprintf(parser_log, "%d : Function Delaration\n", yylineno);} FUNC IDENTIFIER '(' parameter_list ';' declaration_specifier ')' compound_statement   
-    {$$ = $7 + " " + $3 + "(" + $5 + ") " + $9;}
+    {
+        $$ = $7 + " " + $3 + "(" + $5 + ") " + $9;
+        if (!contains_return($9)) {
+            printf("syntax error: No return statement in line %d\n", yylineno);
+            exit(0);
+        }
+    }
     ;
 
 parameter_list
