@@ -35,7 +35,8 @@ $(OUTPUT_DIR)/output%.cpp: $(OBJECT_FILE) $(INPUT_DIR)/%.txt
 	rm temp_binary
 
 clean:
-	rm -f $(OUTPUT_DIR)/*.cpp $(PRINTED_DIR)/*.txt temp_binary
+	rm -f $(OUTPUT_DIR)/*.cpp $(PRINTED_DIR)/*.txt 
+	rm -f $(PARSED_DIR)/*.txt $(TOKENS_DIR)/*.txt 
 	$(MAKE) -C $(SRC_DIR) clean
 
 .PHONY: all build run clean

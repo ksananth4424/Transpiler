@@ -15,7 +15,13 @@ std::string int_type = "int";
 std::string float_type = "float";
 
 int contains_return(const std::string& code) {
-    return code.find("return") != std::string::npos;
+    std::cout << code << std::endl;
+    // std::regex re(".*r.*");
+    std::regex re("(^|[^a-zA-Z0-9_])return([^a-zA-Z0-9_]|$)");
+    if (std::regex_search(code, re)) {
+        return 1;
+    }
+    return 0;
 }
 %}
 
@@ -70,7 +76,7 @@ function_declaration:
     {
         $$ = $7 + " " + $3 + "(" + $5 + ") " + $9;
         if (!contains_return($9)) {
-            printf("syntax error: No return statement in line %d\n", yylineno);
+            printf("syntax error: No return statement");
             exit(0);
         }
     }
@@ -273,7 +279,8 @@ statement
     | push_pop_statement ';'    {$$ = $1 + ";"; fprintf(parser_log, "%d : Push Pop Statement\n", yylineno);}
     | if_else_statement         {$$ = $1; fprintf(parser_log, "%d : Conditional Statement\n", yylineno);}
     | declaration_statement ';' {$$ = $1 + ";"; fprintf(parser_log, "%d : Variable Declaration\n", yylineno);}
-	;
+    | ';'                       {$$ = $1;}
+    ;
 
 statement_list
 	: statement                 {$$ = $1;}
