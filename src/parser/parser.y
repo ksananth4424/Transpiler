@@ -41,7 +41,7 @@ int contains_return(const std::string& code) {
 
 start_rule
     : set_up_section program_body {
-        puts("success");
+        puts("successfully parsed!");
         $$ = "#include<bits/stdc++.h>\n" + $1 + "\n" + $2;
         std::ofstream output("transpiled_cpp.cpp");
         if (output.is_open()) {
@@ -50,13 +50,13 @@ start_rule
             // Close the file
             output.close();
         } else {
-            std::cerr << "Unable to open file for writing" << std::endl;
+            std::cout << "Unable to open file for writing" << std::endl;
         }
     }
 
 program_body
     : statement_list    {$$ = "\nint main() {\n" + $1 + "\n}";}
-    |                   {$$ = "";}
+    /* |                   {$$ = "";} */
     ;
 
 set_up_section
@@ -92,7 +92,7 @@ set_statement
     ;
 
 primary_expression 
-    : '(' expression ')'    {$$ = "(" + $2 + ")";}
+    : '(' assignment_statement ')'    {$$ = "(" + $2 + ")";}
     | CONSTANT              {$$ = $1;}
     ;
 
@@ -102,13 +102,13 @@ function_call
     ;
 
 argument_expression_list
-    : expression                                {$$ = $1;}
-    | argument_expression_list ',' expression   {$$ = $1 + ", " + $3;}
+    : assignment_statement                                {$$ = $1;}
+    | argument_expression_list ',' assignment_statement   {$$ = $1 + ", " + $3;}
     ;    
 
 map_array
-    : '[' expression ']'                        {$$ = "[" + $2 + "]";}
-    | map_array '[' expression ']'              {$$ = $1 + "[" + $3 + "]";}
+    : '[' assignment_statement ']'                        {$$ = "[" + $2 + "]";}
+    | map_array '[' assignment_statement ']'              {$$ = $1 + "[" + $3 + "]";}
     ;
 
 postfix_expression 
@@ -118,13 +118,20 @@ postfix_expression
     | primary_expression                        {$$ = $1;}
     ;
 
+unary_expression_2
+    : NOT unary_expression                      {$$ = "!" + $2;}
+    | '~' unary_expression                      {$$ = "~" + $2;}
+    | SIZE '[' lhs_expression ']'               {$$ = $3 + ".size()";}
+    | postfix_expression                        {$$ = $1;}
+    ;
+
 unary_expression 
     : NOT unary_expression                      {$$ = "!" + $2;}
     | '~' unary_expression                      {$$ = "~" + $2;}
-    | '-' unary_expression                      {$$ = "-" + $2;}
-    | '+' unary_expression                      {$$ = "+" + $2;}
-    | SIZE '[' postfix_expression ']'           {$$ = $3 + ".size()";}
-    | postfix_expression                       {$$ = $1;}
+    | '-' unary_expression_2                      {$$ = "-" + $2;}
+    | '+' unary_expression_2                      {$$ = "+" + $2;}
+    | SIZE '[' lhs_expression ']'               {$$ = $3 + ".size()";}
+    | postfix_expression                        {$$ = $1;}
     ;
 
 expression 
@@ -149,7 +156,7 @@ expression
 
 assignment_statement    
     : expression                                            {$$ = $1;}
-    | lhs_expression '=' expression                         {$$ = $1 + " = " + $3;}
+    | lhs_expression '=' assignment_statement               {$$ = $1 + " = " + $3;}
     ;
 
 lhs_expression
