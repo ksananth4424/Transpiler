@@ -25,25 +25,27 @@ $(OUTPUT_DIR)/output%.cpp: $(OBJECT_FILE) $(INPUT_DIR)/%.txt
 
 	@echo "\e[33m\nTesting correct input$(shell echo $* | sed 's/[^0-9]//g')\e[0m"
 
-	$(EXECUTABLE) $(INPUT_DIR)/$*.txt > transpiled_cpp.cpp
+	@$(EXECUTABLE) $(INPUT_DIR)/$*.txt > transpiled_cpp.cpp 
 
-	mv transpiled_cpp.cpp $(OUTPUT_DIR)/output$(shell echo $* | sed 's/[^0-9]//g').cpp
-	mv lexer_log.txt $(TOKENS_DIR)/tokens$(shell echo $* | sed 's/[^0-9]//g').txt
-	mv parser_log.txt $(PARSED_DIR)/parsed$(shell echo $* | sed 's/[^0-9]//g').txt
+	@mv transpiled_cpp.cpp $(OUTPUT_DIR)/output$(shell echo $* | sed 's/[^0-9]//g').cpp
+	@mv lexer_log.txt $(TOKENS_DIR)/tokens$(shell echo $* | sed 's/[^0-9]//g').txt
+	@mv parser_log.txt $(PARSED_DIR)/parsed$(shell echo $* | sed 's/[^0-9]//g').txt
 
-	g++ -o temp_binary $(OUTPUT_DIR)/output$(shell echo $* | sed 's/[^0-9]//g').cpp 
-	./temp_binary > $(PRINTED_DIR)/printed$(shell echo $* | sed 's/[^0-9]//g').txt
-	rm temp_binary
+	@g++ -o temp_binary $(OUTPUT_DIR)/output$(shell echo $* | sed 's/[^0-9]//g').cpp 
+	@./temp_binary > $(PRINTED_DIR)/printed$(shell echo $* | sed 's/[^0-9]//g').txt
+	@rm temp_binary
+	@echo "\e[32mPASSED\e[0m"
 
 incorrect_inputs: $(INCORRECT_TEST_FILES)
-
 	@for file in $^; do \
-        echo "\e[33m\nTesting incorrect input$(shell echo $$file | sed 's/[^0-9]//g')\e[0m"; \
-        echo "Incorrect input file $$file"; \
+        NUMBER=$$(echo $$file | sed 's/[^0-9]//g'); \
+        echo "\e[33m\nTesting incorrect input$$NUMBER\e[0m"; \
+        echo -n "\e[31m"; \
         $(EXECUTABLE) $$file; \
+        echo -n "\e[0m"; \
     done
 	
-	rm parser_log.txt lexer_log.txt
+	@rm parser_log.txt lexer_log.txt
 
 clean:
 	rm -f $(OUTPUT_DIR)/*.cpp $(PRINTED_DIR)/*.txt $(TOKENS_DIR)/*.txt $(PARSED_DIR)/*.txt

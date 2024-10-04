@@ -10,6 +10,7 @@ func total_area ( [float] h, [float] b ; float)  # comment
   <<
     return sum;
   >>
+  return sum;
 >
 
 [float] h, b;
