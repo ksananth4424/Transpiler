@@ -1,0 +1,6 @@
+set int small
+set float big
+
+func area([float] h ; ) <  # missing return type
+    return h;
+>

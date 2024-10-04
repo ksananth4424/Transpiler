@@ -1,0 +1,5 @@
+set int big
+loop int i=0; i<size[h] i=i+1) :  # missing parentheses
+<
+    print(i);
+>
