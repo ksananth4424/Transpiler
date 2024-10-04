@@ -1,5 +1,5 @@
 BUILD_DIR = ../../build
-LEX_FILE = lexer.l
+LEX_FILE = ../lexer/lexer.l
 YACC_FILE = parser.y
 LEX_C = lex.yy.c
 YACC_C = y.tab.c
