@@ -19,23 +19,20 @@ build:
 run: $(OBJECT_FILE) $(OUTPUT_FILES)
 
 $(OUTPUT_DIR)/output%.cpp: $(OBJECT_FILE) $(INPUT_DIR)/%.txt
-	# wait for the object file to be generated
 	@while [ ! -f $(OBJECT_FILE) ]; do sleep 1; done
 
-	# supress the output
-	$(EXECUTABLE) $(INPUT_DIR)/$*.txt > /dev/null
-	mv transpiled_cpp.cpp $(OUTPUT_DIR)/output$*.cpp 
-	mv lexer_log.txt $(TOKENS_DIR)/tokens$*.txt
-	mv parser_log.txt $(PARSED_DIR)/parsed$*.txt
+	$(EXECUTABLE) $(INPUT_DIR)/$*.txt > transpiled_cpp.cpp
 
-	# run the generated C++ code and print the output
-	g++ -o temp_binary $(OUTPUT_DIR)/output$*.cpp 
-	./temp_binary > $(PRINTED_DIR)/printed$*.txt
+	mv transpiled_cpp.cpp $(OUTPUT_DIR)/output$(shell echo $* | sed 's/[^0-9]//g').cpp
+	mv lexer_log.txt $(TOKENS_DIR)/tokens$(shell echo $* | sed 's/[^0-9]//g').txt
+	mv parser_log.txt $(PARSED_DIR)/parsed$(shell echo $* | sed 's/[^0-9]//g').txt
+
+	g++ -o temp_binary $(OUTPUT_DIR)/output$(shell echo $* | sed 's/[^0-9]//g').cpp 
+	./temp_binary > $(PRINTED_DIR)/printed$(shell echo $* | sed 's/[^0-9]//g').txt
 	rm temp_binary
 
 clean:
-	rm -f $(OUTPUT_DIR)/*.cpp $(PRINTED_DIR)/*.txt 
-	rm -f $(PARSED_DIR)/*.txt $(TOKENS_DIR)/*.txt 
+	rm -f $(OUTPUT_DIR)/*.cpp $(PRINTED_DIR)/*.txt $(TOKENS_DIR)/*.txt $(PARSED_DIR)/*.txt
 	$(MAKE) -C $(SRC_DIR) clean
 
 .PHONY: all build run clean

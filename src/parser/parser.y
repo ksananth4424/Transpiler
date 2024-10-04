@@ -45,7 +45,7 @@ int contains_return(const std::string& code) {
 
 start_rule
     : set_up_section program_body {
-        puts("successfully parsed!");
+        // puts("successfully parsed!");
         $$ = "#include<bits/stdc++.h>\n" + $1 + "\n" + $2;
         std::ofstream output("transpiled_cpp.cpp");
         if (output.is_open()) {

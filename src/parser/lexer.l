@@ -79,7 +79,7 @@ L			[a-zA-Z_]
 %%
 
 void count() {
-    ECHO;
-    printf("\t");
+    /* ECHO; */
+    /* printf("\t"); */
     yylval = yytext;
 }
