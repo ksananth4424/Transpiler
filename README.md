@@ -1,5 +1,7 @@
 # Transpiler
 
+This is a project to convert a language as given in the problem statement and transpile it to C++ code.
+
 ## File Structure
 
 The file structure of the Transpiler is shown below:
@@ -28,8 +30,8 @@ Transpiler
 
 In order to build and run this project, follow the commands listed below:
 
-  $ cd build
-  $ make
+    $ cd build
+    $ make
 
 This will create all the required files according to the input files in the ./test/input directory. It produces the following outputs:
 
@@ -44,7 +46,7 @@ Additionally, it runs the incorrect test cases present in the ./test/incorrect_i
 
 To clean the project, run the following command:
 
-  $ make clean
+    $ make clean
 
 This command will remove all the files created by the Makefile in the build directory.
 
