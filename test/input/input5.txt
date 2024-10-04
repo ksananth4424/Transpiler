@@ -1,0 +1,42 @@
+set int small;
+set int big;
+set float big;
+
+# function_declaration
+func function_1(int x, float y ; int) <
+    int z = (y * x / (y + x)) + 2;
+    return z ^ 4 | z & z + 2 * 10;
+>
+
+func function_2({int:float} z, [{int:[float]}] w ; float) <
+    int a = size[z], b = size[w];
+    float sum = 0;
+    loop (int i = 0; i < b; i = i + 1) : <
+        loop (int j = 0; j < size[w[i]]; j = j + 1): <
+            loop (int k = 0; k < size[w[i][j]]; k = k + 1) : <
+                <
+                    w[i][j][k] > 0 ? sum = sum + w[i][j][k];
+                >
+            >
+        >
+    >
+    return sum;
+>
+
+func function_3(; {int:{int:[float]}}) <
+    {int:{int:[float]}} y;
+    y[0][0] <- [.0];
+    return y;
+>
+
+int x = 2;
+float y = 10;
+
+int z = function_1(x, y);
+print(z);
+print(function_1(x, y));
+print(x * y);
+
+{int:{int:[float]}} a = function_3();
+print(a[0][0][0]);
+

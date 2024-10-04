@@ -62,7 +62,6 @@ start_rule
 
 program_body
     : statement_list    {$$ = "\nint main() {\n" + $1 + "\n}";}
-    /* |                   {$$ = "";} */
     ;
 
 set_up_section
@@ -72,7 +71,7 @@ set_up_section
     ;
 
 function_declaration:
-    {fprintf(parser_log, "%d : Function Delaration\n", yylineno);} FUNC IDENTIFIER '(' parameter_list ';' declaration_specifier ')' compound_statement   
+    {fprintf(parser_log, "%d : Function Delaration\n", yylineno);} FUNC IDENTIFIER '(' optional_parameter_list ';' declaration_specifier ')' compound_statement   
     {
         $$ = $7 + " " + $3 + "(" + $5 + ") " + $9;
         if (!contains_return($9)) {
@@ -80,6 +79,11 @@ function_declaration:
             exit(0);
         }
     }
+    ;
+
+optional_parameter_list
+    :                                   {$$ = "";}
+    | parameter_list                    {$$ = $1;}
     ;
 
 parameter_list
@@ -128,6 +132,8 @@ unary_expression_2
     : NOT unary_expression                      {$$ = "!" + $2;}
     | '~' unary_expression                      {$$ = "~" + $2;}
     | SIZE '[' lhs_expression ']'               {$$ = $3 + ".size()";}
+    | SIZE '[' function_call ']'                {$$ = $3 + ".size()";}
+    | SIZE '[' function_call map_array ']'      {$$ = $3 + $4 + ".size()";}
     | postfix_expression                        {$$ = $1;}
     ;
 
@@ -177,7 +183,7 @@ declaration_statement
 declaration_specifier
     : type_specifier                                            {$$ = $1;}
     | '[' declaration_specifier ']'                             {$$ = "std::deque<" + $2 + ">";} 
-    | '{' declaration_specifier ':' declaration_specifier '}'   {$$ = "std::map<" + $2 + ">";} 
+    | '{' declaration_specifier ':' declaration_specifier '}'   {$$ = "std::map<" + $2 + ", " + $4 + ">";} 
     ;
 
 init_declarator_list
