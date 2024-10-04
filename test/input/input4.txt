@@ -1,0 +1,17 @@
+set int small;
+int absent_days = 2;
+float marks = 75;
+int grade = 0;
+
+< absent_days == 0 ? 
+    < marks > 80? grade = 10; >
+    < marks > 60? grade = 8;
+    else: grade = 4; >
+else: 
+< absent_days < 5 ? 
+    < marks > 70? grade = 6; >
+    < marks > 50? grade = 4;
+    else: grade = 2; >
+>
+>
+print(grade);
