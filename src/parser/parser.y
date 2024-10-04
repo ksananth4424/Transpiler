@@ -15,8 +15,6 @@ std::string int_type = "int";
 std::string float_type = "float";
 
 int contains_return(const std::string& code) {
-    std::cout << code << std::endl;
-    // std::regex re(".*r.*");
     std::regex re("(^|[^a-zA-Z0-9_])return([^a-zA-Z0-9_]|$)");
     if (std::regex_search(code, re)) {
         return 1;
