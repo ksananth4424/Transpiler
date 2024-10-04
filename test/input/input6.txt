@@ -16,8 +16,24 @@ finally : <
 
 loop (int i = 0; i < 10;) : <
     int j = i, sum = 0;
-    loop (; j < i + 10; j = j + 1) : <
+    loop (; j < i + 10; ) : <
         sum = sum * i + j;
+        j = j + 1;
+    >
+    finally : <
+        print(sum);
+        i = i + 1;
+    >
+>
+finally : <
+    print(i);
+>
+
+loop (int i = 0; i < 10;) : <
+    int j, sum = 0;
+    loop (j = i; j < i + 10; ) : <
+        sum = sum * i + j;
+        j = j + 1;
     >
     finally : <
         print(sum);

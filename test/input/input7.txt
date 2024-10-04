@@ -1,0 +1,33 @@
+set int big;
+
+# sorting algorithm
+func sort([int] array; [int]) <
+    int s = size[array];
+    loop (int i = 0; i < s; i = i + 1) : <
+        loop (int j = i + 1; j < s; j = j + 1) : <
+            <
+                array[i] > array[j] ? 
+                    int temp = array[i];
+                    array[i] = array[j];
+                    array[j] = temp;
+            >
+        >
+    >
+    return array;
+>
+
+[int] array;
+
+loop (int i = 0; i < 15; i = i + 1) : <
+    [2 * i] -> array;
+>
+
+loop (int i = 0; i < 15; i = i + 1) : <
+    print(array[i]);
+>
+
+array = sort(array);
+
+loop (int i = 0; i < 15; i = i + 1) : <
+    print(array[i]);
+>

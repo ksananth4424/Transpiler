@@ -240,9 +240,9 @@ loop_statement:
     {fprintf(parser_log, "%d : Loop Statement\n", yylineno);} iteration_statement   {$$ = $2;}
 
 iteration_statement
-    : LOOP '(' assignment_statement ';' optional_expression ';' optional_assignment ')' ':' compound_statement optional_finally      {$$ = "for(" + $3 + ";" + $5 + ";) " + $10.substr(0, $10.size() - 1) + $7 + ";" + ($11.size() == 0 ? "\n}" : "\nif (!(" + $5 + ")) " + $11 + "\n}");}
-    | LOOP '(' declaration_statement ';' optional_expression ';' optional_assignment ')' ':' compound_statement optional_finally     {$$ = "for(" + $3 + ";" + $5 + ";) " + $10.substr(0, $10.size() - 1) + $7 + ";" + ($11.size() == 0 ? "\n}" : "\nif (!(" + $5 + ")) " + $11 + "\n}");}
-    | LOOP '(' ';' optional_expression ';' optional_assignment ')' ':' compound_statement optional_finally                           {$$ = "for(;" + $4 + ";) " + $9.substr(0, $9.size() - 1) + $6 + ";" + ($10.size() == 0 ? "\n}" : "\nif (!(" + $4 + ")) " + $10 + "\n}");}
+    : LOOP '(' assignment_statement ';' optional_expression ';' optional_assignment ')' ':' compound_statement optional_finally      {$$ = "for(" + $3 + ";" + $5 + ";) " + $10.substr(0, $10.size() - 1) + $7 + ($7 == "" ? "" : ";") + ($11.size() == 0 ? "\n}" : "\nif (!(" + $5 + ")) " + $11 + "\n}");}
+    | LOOP '(' declaration_statement ';' optional_expression ';' optional_assignment ')' ':' compound_statement optional_finally     {$$ = "for(" + $3 + ";" + $5 + ";) " + $10.substr(0, $10.size() - 1) + $7 + ($7 == "" ? "" : ";") + ($11.size() == 0 ? "\n}" : "\nif (!(" + $5 + ")) " + $11 + "\n}");}
+    | LOOP '(' ';' optional_expression ';' optional_assignment ')' ':' compound_statement optional_finally                           {$$ = "for(;" + $4 + ";) " + $9.substr(0, $9.size() - 1) + $6 + ($6 == "" ? "" : ";") + ($10.size() == 0 ? "\n}" : "\nif (!(" + $4 + ")) " + $10 + "\n}");}
 	;
 
 optional_finally
