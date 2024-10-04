@@ -1,0 +1,29 @@
+set int small;
+set int big;
+set float small;
+
+loop (int i = 0; i < 10; i = i + 1) : <
+    loop (int j = i, sum = 0; j < i + 10; j = j + 1) : <
+        sum = sum * i + j;
+    >
+    finally : <
+        print(sum);
+    >
+>
+finally : <
+    print(i);
+>
+
+loop (int i = 0; i < 10;) : <
+    int j = i, sum = 0;
+    loop (; j < i + 10; j = j + 1) : <
+        sum = sum * i + j;
+    >
+    finally : <
+        print(sum);
+        i = i + 1;
+    >
+>
+finally : <
+    print(i);
+>

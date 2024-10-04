@@ -242,12 +242,12 @@ loop_statement:
 iteration_statement
     : LOOP '(' assignment_statement ';' optional_expression ';' optional_assignment ')' ':' compound_statement optional_finally      {$$ = "for(" + $3 + ";" + $5 + ";) " + $10.substr(0, $10.size() - 1) + $7 + ";" + ($11.size() == 0 ? "\n}" : "\nif (!(" + $5 + ")) " + $11 + "\n}");}
     | LOOP '(' declaration_statement ';' optional_expression ';' optional_assignment ')' ':' compound_statement optional_finally     {$$ = "for(" + $3 + ";" + $5 + ";) " + $10.substr(0, $10.size() - 1) + $7 + ";" + ($11.size() == 0 ? "\n}" : "\nif (!(" + $5 + ")) " + $11 + "\n}");}
-    | LOOP '(' ';' optional_expression ';' optional_assignment ')' ':' compound_statement optional_finally                           {$$ = "for(;" + $4 + ";) " + $10.substr(0, $9.size() - 1) + $6 + ";" + ($10.size() == 0 ? "\n}" : "\nif (!(" + $4 + ")) " + $10 + "\n}");}
+    | LOOP '(' ';' optional_expression ';' optional_assignment ')' ':' compound_statement optional_finally                           {$$ = "for(;" + $4 + ";) " + $9.substr(0, $9.size() - 1) + $6 + ";" + ($10.size() == 0 ? "\n}" : "\nif (!(" + $4 + ")) " + $10 + "\n}");}
 	;
 
 optional_finally
     :                                      {$$ = "";} 
-    | FINALLY ':' compound_statement     {$$ = $3;}
+    | FINALLY ':' compound_statement     {$$ = $3.substr(0, $3.size() - 1) + "break" + ";\n}";}
     ;
 
 optional_assignment
