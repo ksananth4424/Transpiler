@@ -59,7 +59,14 @@ start_rule
     }
 
 program_body
-    : statement_list    {$$ = "\nint main() {\n" + $1 + "\n}";}
+    : statement_list    
+    {
+        $$ = "\nint main() {\n" + $1 + "\n}"; 
+        if (contains_return($1)) {
+            printf("syntax error: return statement allowed only in function definition");
+            exit(0);
+        }
+    }
     ;
 
 set_up_section
