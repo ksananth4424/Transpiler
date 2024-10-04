@@ -1,0 +1,13 @@
+set int big;
+[int] a, b;
+a <- [1]; a <- [2]; a <- [3];
+b <- [4]; b <- [5]; b <- [6];
+
+[int] result;
+loop (int i=0; i < size[a]; i=i+1) : <
+    result <- [a[i] + b[i]];
+>
+
+print(result[0]);
+print(result[1]);
+print(result[2]);

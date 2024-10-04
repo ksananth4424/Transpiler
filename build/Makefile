@@ -9,7 +9,6 @@ EXECUTABLE = ./main.o
 
 TEST_FILES = $(wildcard $(INPUT_DIR)/*.txt)
 OUTPUT_FILES = $(patsubst $(INPUT_DIR)/%.txt, $(OUTPUT_DIR)/output%.cpp, $(TEST_FILES))
-PRINTED_FILES = $(patsubst $(INPUT_DIR)/%.txt, $(PRINTED_DIR)/printed%.txt, $(TEST_FILES))
 
 all: build run
 
