@@ -1,0 +1,7 @@
+func function_3(; {int:{int:[float]}}) < # no return statement
+    {int:{int:[float]}} y;
+    y[0][0] <- [.0];
+>
+
+{int:{int:[float]}} a = function_3();
+print(a[0][0][0]);

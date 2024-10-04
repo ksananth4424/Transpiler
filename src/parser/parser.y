@@ -45,13 +45,10 @@ int contains_return(const std::string& code) {
 
 start_rule
     : set_up_section program_body {
-        // puts("successfully parsed!");
-        $$ = "#include<bits/stdc++.h>\n" + $1 + "\n" + $2;
+        $$ = "#include<iostream>\n#include<deque>\n#include<map>\n" + $1 + "\n" + $2;
         std::ofstream output("transpiled_cpp.cpp");
         if (output.is_open()) {
-            // Write the content to the file
             output << $$;
-            // Close the file
             output.close();
         } else {
             std::cout << "Unable to open file for writing" << std::endl;
@@ -75,12 +72,17 @@ set_up_section
     | set_up_section set_statement          {$$ = $1;}
     ;
 
+return_type 
+    : declaration_specifier                 {$$ = $1;}                 
+    | VOID                                  {$$ = $1;}
+    ;
+
 function_declaration:
-    {fprintf(parser_log, "%d : Function Delaration\n", yylineno);} FUNC IDENTIFIER '(' optional_parameter_list ';' declaration_specifier ')' compound_statement   
+    {fprintf(parser_log, "%d : Function Delaration\n", yylineno);} FUNC IDENTIFIER '(' optional_parameter_list ';' return_type ')' compound_statement   
     {
         $$ = $7 + " " + $3 + "(" + $5 + ") " + $9;
         if (!contains_return($9)) {
-            printf("syntax error: No return statement");
+            printf("syntax error: No return statement\n");
             exit(0);
         }
     }
@@ -107,8 +109,8 @@ set_statement
     ;
 
 primary_expression 
-    : '(' assignment_statement ')'    {$$ = "(" + $2 + ")";}
-    | CONSTANT              {$$ = $1;}
+    : '(' assignment_statement ')'      {$$ = "(" + $2 + ")";}
+    | CONSTANT                          {$$ = $1;}
     ;
 
 function_call
@@ -225,7 +227,7 @@ push_pop_statement
         $$ = $2 + " = " + $5 + ".front();\n" + $5 + ".pop_front()";
         std::regex re{R"~([a-zA-Z_]([a-zA-Z_]|[0-9])*(\[.*\])*)~"};
         if (!std::regex_match($2, re)) {
-            std::cout << "syntax error\n" << $2 << ' ';
+            std::cout << "syntax error: " << $2 << '\n';
             exit(0);
         }
     }
@@ -253,8 +255,8 @@ iteration_statement
 	;
 
 optional_finally
-    :                                      {$$ = "";} 
-    | FINALLY ':' compound_statement     {$$ = $3.substr(0, $3.size() - 1) + "break" + ";\n}";}
+    :                                       {$$ = "";} 
+    | FINALLY ':' compound_statement        {$$ = $3.substr(0, $3.size() - 1) + "break" + ";\n}";}
     ;
 
 optional_assignment
