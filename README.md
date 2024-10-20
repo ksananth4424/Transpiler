@@ -55,3 +55,9 @@ This command will remove all the files created by the Makefile in the build dire
 -> The main.o object file after build will be present in both the build folder and the ./src/parser directory, as our build process works that way. \
 -> Testing of files happens in lexicographical order. \
 -> Please ignore any warnings that might pop up. The project works end-to-end perfectly.
+
+# Acknowledgment
+
+[Nimai Parsa](https://github.com/nimaiParsa)
+
+[K S Ananth](https://github.com/ksananth4424)
